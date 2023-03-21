@@ -1,5 +1,7 @@
 import "./App.css"
 import { Route, Routes } from "react-router-dom"
+import { Dashboard } from "./pages/Dashboard"
+import { History } from "./pages/History"
 
 function App() {
   return (
