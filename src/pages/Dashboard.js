@@ -45,8 +45,8 @@ export const Dashboard = () => {
           Air Quality Measure
         </div>
 
-        <div className="grid grid-cols-3 grid-rows-1 gap-36 mb-16">
-          <div className="bg-white rounded-xl flex flex-col justify-around">
+        <div className="flex justify-between mb-16">
+          <div className="bg-white rounded-xl flex flex-col w-[25%] justify-around">
             <div className="text-center text-light-purple text-3xl">
               AIR QUALITY
             </div>
@@ -67,8 +67,8 @@ export const Dashboard = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 grid-rows-2 gap-8">
-            <div className="bg-white rounded-xl flex py-4">
+          <div className="w-[28%]">
+            <div className="bg-white rounded-xl flex py-4 mb-8">
               <div className="flex align-middle justify-center">
                 <img
                   className="max-w-[65%] align-middle m-auto"
@@ -104,8 +104,8 @@ export const Dashboard = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 grid-rows-2 gap-8">
-            <div className="bg-white rounded-xl flex py-4">
+          <div className="w-[28%]">
+            <div className="bg-white rounded-xl flex py-4 mb-8">
               <div className="flex align-middle justify-center">
                 <img
                   className="max-w-[65%] align-middle m-auto"
