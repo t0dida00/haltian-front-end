@@ -39,7 +39,7 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="bg-[#F8F8FF] h-full">
+    <div className="bg-[#F8F8FF] max-h-screen">
       <div className="py-12 px-32">
         <div className="text-light-purple font-bold text-5xl font-sans mb-12">
           Air Quality Measure
