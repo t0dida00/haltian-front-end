@@ -136,7 +136,7 @@ export const Connection = () => {
               className="w-[10%] text-light-purple align-center my-auto text-right"
               htmlFor="cert"
             >
-              File 1:
+              Certificate:
             </label>
             <input
               className="w-[85%] pl-2 my-2"
@@ -151,7 +151,7 @@ export const Connection = () => {
               className="w-[10%] text-light-purple align-center my-auto text-right"
               htmlFor="key"
             >
-              File 2:
+              Key:
             </label>
             <input
               className="w-[85%] pl-2 my-2 "
