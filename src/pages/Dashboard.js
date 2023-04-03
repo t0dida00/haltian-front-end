@@ -15,13 +15,17 @@ ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
 export const Dashboard = () => {
   const [airPressure, setAirPressure] = useState(null)
   const [humidity, setHumidity] = useState(null)
+  const [temperature, setTemperature] = useState(null)
+  const [lightLevel, setLightLevel] = useState(null)
 
   useEffect(() => {
-    fetch("http://localhost:3000/set-up")
+    fetch("http://localhost:3000/")
       .then((response) => response.json())
       .then((data) => {
         setAirPressure(data.airp)
         setHumidity(data.humd)
+        setTemperature(data.temp)
+        setLightLevel(data.lght)
       })
       .catch((error) => {
         console.error("Error fetching JSON data", error)
@@ -151,7 +155,9 @@ export const Dashboard = () => {
                 <div className="text-3xl text-light-purple font-medium pt-8 pb-4">
                   Temperature
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">22.5</div>
+                <div className="inline-block text-5xl pr-4 pb-8">
+                  {temperature ?? "Loading..."}
+                </div>
                 <div className="inline-block text-3xl font-light">Cel</div>
               </div>
             </div>
