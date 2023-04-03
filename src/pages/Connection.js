@@ -22,7 +22,7 @@ export const Connection = () => {
       useSSL,
     }
 
-    fetch("/localhost:3000/", {
+    fetch("http://localhost:3000/set-up/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
