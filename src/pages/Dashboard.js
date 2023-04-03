@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar"
 import "react-circular-progressbar/dist/styles.css"
 import { Line } from "react-chartjs-2"
@@ -13,6 +13,21 @@ import {
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
 
 export const Dashboard = () => {
+  const [airPressure, setAirPressure] = useState(null)
+  const [humidity, setHumidity] = useState(null)
+
+  useEffect(() => {
+    fetch("http://localhost:3000/set-up")
+      .then((response) => response.json())
+      .then((data) => {
+        setAirPressure(data.airp)
+        setHumidity(data.humd)
+      })
+      .catch((error) => {
+        console.error("Error fetching JSON data", error)
+      })
+  }, [])
+
   const data = {
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     datasets: [
@@ -117,7 +132,9 @@ export const Dashboard = () => {
                 <div className="text-3xl text-light-purple font-medium  pt-8 pb-4">
                   Air Pressure
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">1020</div>
+                <div className="inline-block text-5xl pr-4 pb-8">
+                  {airPressure ?? "Loading..."}
+                </div>
                 <div className="inline-block text-3xl font-light">hPA</div>
               </div>
             </div>
@@ -150,7 +167,9 @@ export const Dashboard = () => {
                     <img className="max-w-[40%] " src="logo192.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Humidity</div>
-                      <div className="font-bold">67.2%</div>
+                      <div className="font-bold">
+                        {humidity ?? "Loading..."}%
+                      </div>
                     </div>
                   </div>
                   <div className="flex">
