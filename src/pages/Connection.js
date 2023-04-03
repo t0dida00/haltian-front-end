@@ -2,16 +2,40 @@ import React, { useState } from "react"
 
 export const Connection = () => {
   const [clientId, setClientId] = useState("")
-  const [hostProtocol, setHostProtocol] = useState("mqtt")
-  const [hostAddress, setHostAddress] = useState("")
+  const [protocol, setProtocol] = useState("mqtt")
+  const [host, setHost] = useState("")
   const [topic, setTopic] = useState("")
   const [useSSL, setUseSSL] = useState(false)
-  const [file1, setFile1] = useState(null)
-  const [file2, setFile2] = useState(null)
+  const [cert, setCert] = useState(null)
+  const [key, setKey] = useState(null)
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    // Perform form submission logic here, such as sending data to a server
+
+    const data = {
+      clientId,
+      protocol,
+      host,
+      topic,
+      cert,
+      key,
+      useSSL,
+    }
+
+    fetch("/localhost:3000/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   return (
@@ -49,16 +73,16 @@ export const Connection = () => {
           <div className="flex justify-between">
             <label
               className="w-[10%] text-light-purple align-center my-auto text-right"
-              htmlFor="hostProtocol"
+              htmlFor="protocol"
             >
               Host:
             </label>
             <div className="w-[85%]">
               <select
                 className="w-[20%] border border-gray-300 focus:outline-none focus:border-light-purple rounded-lg shadow-sm pl-2 my-2 py-1"
-                id="hostProtocol"
-                value={hostProtocol}
-                onChange={(event) => setHostProtocol(event.target.value)}
+                id="protocol"
+                value={protocol}
+                onChange={(event) => setProtocol(event.target.value)}
               >
                 <option value="mqtt">mqtt</option>
                 <option value="mqtts">mqtts</option>
@@ -66,9 +90,9 @@ export const Connection = () => {
               <input
                 className="w-[80%] border border-gray-300 focus:outline-none focus:border-light-purple rounded-lg shadow-sm pl-2 my-2 py-1"
                 type="text"
-                id="hostAddress"
-                value={hostAddress}
-                onChange={(event) => setHostAddress(event.target.value)}
+                id="host"
+                value={host}
+                onChange={(event) => setHost(event.target.value)}
               />
             </div>
           </div>
@@ -110,30 +134,30 @@ export const Connection = () => {
           <div className="flex justify-between">
             <label
               className="w-[10%] text-light-purple align-center my-auto text-right"
-              htmlFor="file1"
+              htmlFor="cert"
             >
               File 1:
             </label>
             <input
               className="w-[85%] pl-2 my-2"
               type="file"
-              id="file1"
-              onChange={(event) => setFile1(event.target.files[0])}
+              id="cert"
+              onChange={(event) => setCert(event.target.files[0])}
             />
           </div>
 
           <div className="flex justify-between">
             <label
               className="w-[10%] text-light-purple align-center my-auto text-right"
-              htmlFor="file2"
+              htmlFor="key"
             >
               File 2:
             </label>
             <input
               className="w-[85%] pl-2 my-2 "
               type="file"
-              id="file2"
-              onChange={(event) => setFile2(event.target.files[0])}
+              id="key"
+              onChange={(event) => setKey(event.target.files[0])}
             />
           </div>
 
