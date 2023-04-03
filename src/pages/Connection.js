@@ -1,9 +1,11 @@
 import React, { useState } from "react"
+import axios from "axios"
 
 export const Connection = () => {
   const [clientId, setClientId] = useState("")
   const [protocol, setProtocol] = useState("mqtt")
   const [host, setHost] = useState("")
+  const [port, setPort] = useState("")
   const [topic, setTopic] = useState("")
   const [useSSL, setUseSSL] = useState(false)
   const [cert, setCert] = useState(null)
@@ -12,26 +14,23 @@ export const Connection = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    const data = {
-      clientId,
-      protocol,
-      host,
-      topic,
-      cert,
-      key,
-      useSSL,
-    }
+    const formData = new FormData()
+    formData.append("clientID", clientId)
+    formData.append("protocol", protocol)
+    formData.append("host", host)
+    formData.append("topic", topic)
+    formData.append("useSSL", useSSL)
+    formData.append("cert", cert[0])
+    formData.append("key", key[0])
 
-    fetch("http://localhost:3000/set-up/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
+    axios
+      .post("http://localhost:3000/set-up/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log(response.data)
       })
       .catch((error) => {
         console.log(error)
@@ -95,6 +94,22 @@ export const Connection = () => {
                 onChange={(event) => setHost(event.target.value)}
               />
             </div>
+          </div>
+
+          <div className="flex justify-between">
+            <label
+              className="w-[10%] text-light-purple align-center my-auto text-right"
+              htmlFor="clientId"
+            >
+              Port:
+            </label>
+            <input
+              className="w-[85%] border border-gray-300 focus:outline-none focus:border-light-purple rounded-lg shadow-sm pl-2 my-2 py-1"
+              type="text"
+              id="port"
+              value={port}
+              onChange={(event) => setPort(event.target.value)}
+            />
           </div>
 
           <div className="flex justify-between">
