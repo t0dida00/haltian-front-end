@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
 export const Connection = () => {
   const [clientId, setClientId] = useState("")
@@ -11,30 +11,27 @@ export const Connection = () => {
   const [cert, setCert] = useState(null)
   const [key, setKey] = useState(null)
 
-  const handleSubmit = (event) => {
+  const navigate = useNavigate()
+
+  const handleSubmit = async (event) => {
     event.preventDefault()
 
     const formData = new FormData()
-    formData.append("clientID", clientId)
+    formData.append("clientId", clientId)
     formData.append("protocol", protocol)
     formData.append("host", host)
+    formData.append("port", port)
     formData.append("topic", topic)
     formData.append("useSSL", useSSL)
-    formData.append("cert", cert[0])
-    formData.append("key", key[0])
+    formData.append("cert", cert)
+    formData.append("key", key)
 
-    axios
-      .post("http://localhost:3000/set-up/", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        console.log(response.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    const response = await fetch("http://localhost:3000/set-up", {
+      method: "POST",
+      body: formData,
+    })
+
+    navigate("/dashboard")
   }
 
   return (
