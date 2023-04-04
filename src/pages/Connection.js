@@ -30,8 +30,6 @@ export const Connection = () => {
       method: "POST",
       body: formData,
     })
-
-    navigate("/dashboard")
   }
 
   return (
@@ -177,6 +175,9 @@ export const Connection = () => {
             <button
               className="mt-8 bg-light-purple text-white rounded-full px-6 py-2"
               type="submit"
+              onClick={() => {
+                navigate("/dashboard")
+              }}
             >
               Submit
             </button>
