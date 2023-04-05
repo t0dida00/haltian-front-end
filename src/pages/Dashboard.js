@@ -9,28 +9,28 @@ import {
   LinearScale,
   PointElement,
 } from "chart.js"
+import io from "socket.io-client"
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
 
 export const Dashboard = () => {
-  const [airPressure, setAirPressure] = useState(null)
-  const [humidity, setHumidity] = useState(null)
-  const [temperature, setTemperature] = useState(null)
-  const [lightLevel, setLightLevel] = useState(null)
+  const socket = io("https://localhost:3000")
+  const [realTimeData, setRealTimeData] = useState({
+    light: 0,
+    co2: 0,
+    tvoc: 0,
+    humd: 0,
+    airp: 0,
+    temp: 0,
+    sunrise: "12:00",
+    sunset: "12:00",
+  })
 
   useEffect(() => {
-    fetch("http://localhost:3000/")
-      .then((response) => response.json())
-      .then((data) => {
-        setAirPressure(data.airp)
-        setHumidity(data.humd)
-        setTemperature(data.temp)
-        setLightLevel(data.lght)
-      })
-      .catch((error) => {
-        console.error("Error fetching JSON data", error)
-      })
-  }, [])
+    socket.on("data", (res) => {
+      setRealTimeData(res.elements)
+    })
+  })
 
   const data = {
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -100,7 +100,9 @@ export const Dashboard = () => {
                 <div className="text-3xl text-light-purple font-medium pt-8 pb-4">
                   Carbon Dioxide
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">538</div>
+                <div className="inline-block text-5xl pr-4 pb-8">
+                  {data.co2}
+                </div>
                 <div className="inline-block text-3xl font-light">ppm</div>
               </div>
             </div>
@@ -117,7 +119,9 @@ export const Dashboard = () => {
                 <div className="text-3xl text-light-purple font-medium pt-8 pb-4">
                   T. V. O. C.
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">72</div>
+                <div className="inline-block text-5xl pr-4 pb-8">
+                  {data.tvoc}
+                </div>
                 <div className="inline-block text-3xl font-light">ppb</div>
               </div>
             </div>
@@ -137,7 +141,7 @@ export const Dashboard = () => {
                   Air Pressure
                 </div>
                 <div className="inline-block text-5xl pr-4 pb-8">
-                  {airPressure ?? "Loading..."}
+                  {data.airp}
                 </div>
                 <div className="inline-block text-3xl font-light">hPA</div>
               </div>
@@ -156,7 +160,7 @@ export const Dashboard = () => {
                   Temperature
                 </div>
                 <div className="inline-block text-5xl pr-4 pb-8">
-                  {temperature ?? "Loading..."}
+                  {data.temp}
                 </div>
                 <div className="inline-block text-3xl font-light">Cel</div>
               </div>
@@ -173,16 +177,14 @@ export const Dashboard = () => {
                     <img className="max-w-[40%] " src="logo192.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Humidity</div>
-                      <div className="font-bold">
-                        {humidity ?? "Loading..."}%
-                      </div>
+                      <div className="font-bold">{data.humd}%</div>
                     </div>
                   </div>
                   <div className="flex">
                     <img className="max-w-[40%] " src="logo192.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Light Level</div>
-                      <div className="font-bold">270</div>
+                      <div className="font-bold">{data.light}</div>
                     </div>
                   </div>
                 </div>
@@ -194,14 +196,14 @@ export const Dashboard = () => {
                     <img className="max-w-[40%] " src="logo192.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Sunrise</div>
-                      <div className="font-bold">6:30 am</div>
+                      <div className="font-bold">{data.sunrise}</div>
                     </div>
                   </div>
                   <div className="flex">
                     <img className="max-w-[40%] " src="logo192.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Sunset</div>
-                      <div className="font-bold">18:30 pm</div>
+                      <div className="font-bold">{data.sunset}</div>
                     </div>
                   </div>
                 </div>
