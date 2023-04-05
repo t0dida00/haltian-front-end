@@ -16,6 +16,8 @@ export const Connection = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
+    navigate("/dashboard")
+
     const formData = new FormData()
     formData.append("clientId", clientId)
     formData.append("protocol", protocol)
@@ -175,9 +177,6 @@ export const Connection = () => {
             <button
               className="mt-8 bg-light-purple text-white rounded-full px-6 py-2"
               type="submit"
-              onClick={() => {
-                navigate("/dashboard")
-              }}
             >
               Submit
             </button>
