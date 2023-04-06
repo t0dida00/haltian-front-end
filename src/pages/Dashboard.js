@@ -14,8 +14,6 @@ import io from "socket.io-client"
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
 
 export const Dashboard = () => {
-  const socket = io("http://localhost:3000")
-
   const [realTimeData, setRealTimeData] = useState({
     light: 0,
     co2: 0,
@@ -27,11 +25,18 @@ export const Dashboard = () => {
     sunset: "12:00",
   })
 
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
+    const socket = io("http://localhost:3000")
     socket.on("message", (res) => {
       setRealTimeData(res.elements)
+      setLoading(false)
     })
-  }, [])
+    return () => {
+      socket.disconnect()
+    }
+  }, [io])
 
   const data = {
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
