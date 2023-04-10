@@ -107,7 +107,7 @@ export const Dashboard = () => {
                   Carbon Dioxide
                 </div>
                 <div className="inline-block text-5xl pr-4 pb-8">
-                  {data.co2}
+                  {realTimeData.co2}
                 </div>
                 <div className="inline-block text-3xl font-light">ppm</div>
               </div>
@@ -126,7 +126,7 @@ export const Dashboard = () => {
                   T. V. O. C.
                 </div>
                 <div className="inline-block text-5xl pr-4 pb-8">
-                  {data.tvoc}
+                  {realTimeData.tvoc}
                 </div>
                 <div className="inline-block text-3xl font-light">ppb</div>
               </div>
@@ -147,7 +147,7 @@ export const Dashboard = () => {
                   Air Pressure
                 </div>
                 <div className="inline-block text-5xl pr-4 pb-8">
-                  {data.airp}
+                  {realTimeData.airp}
                 </div>
                 <div className="inline-block text-3xl font-light">hPA</div>
               </div>
@@ -166,7 +166,7 @@ export const Dashboard = () => {
                   Temperature
                 </div>
                 <div className="inline-block text-5xl pr-4 pb-8">
-                  {data.temp}
+                  {realTimeData.temp}
                 </div>
                 <div className="inline-block text-3xl font-light">Cel</div>
               </div>
@@ -183,14 +183,14 @@ export const Dashboard = () => {
                     <img className="max-w-[40%] " src="logo192.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Humidity</div>
-                      <div className="font-bold">{data.humd}%</div>
+                      <div className="font-bold">{realTimeData.humd}%</div>
                     </div>
                   </div>
                   <div className="flex">
                     <img className="max-w-[40%] " src="logo192.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Light Level</div>
-                      <div className="font-bold">{data.light}</div>
+                      <div className="font-bold">{realTimeData.light}</div>
                     </div>
                   </div>
                 </div>
@@ -202,14 +202,14 @@ export const Dashboard = () => {
                     <img className="max-w-[40%] " src="logo192.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Sunrise</div>
-                      <div className="font-bold">{data.sunrise}</div>
+                      <div className="font-bold">{realTimeData.sunrise}</div>
                     </div>
                   </div>
                   <div className="flex">
                     <img className="max-w-[40%] " src="logo192.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Sunset</div>
-                      <div className="font-bold">{data.sunset}</div>
+                      <div className="font-bold">{realTimeData.sunset}</div>
                     </div>
                   </div>
                 </div>
