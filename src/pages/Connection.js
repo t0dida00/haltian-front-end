@@ -16,7 +16,7 @@ export const Connection = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    // navigate("/dashboard")
+    navigate("/dashboard")
 
     const formData = new FormData()
     formData.append("clientId", clientId)
