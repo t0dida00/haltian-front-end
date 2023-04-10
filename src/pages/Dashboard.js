@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar"
 import "react-circular-progressbar/dist/styles.css"
 import { Line } from "react-chartjs-2"
@@ -11,32 +12,39 @@ import {
 } from "chart.js"
 import io from "socket.io-client"
 
+const socket = io.connect("http://localhost:3000")
+
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
 
 export const Dashboard = () => {
-  const [realTimeData, setRealTimeData] = useState({
-    light: 0,
-    co2: 0,
-    tvoc: 0,
-    humd: 0,
-    airp: 0,
-    temp: 0,
-    sunrise: "12:00",
-    sunset: "12:00",
-  })
+  const navigate = useNavigate()
 
-  const [loading, setLoading] = useState(true)
+  const navigateHistory = () => {
+    navigate("/history")
+  }
+
+  const [light, setLight] = useState(0)
+  const [co2, setCo2] = useState(0)
+  const [tvoc, setTvoc] = useState(0)
+  const [humd, setHumd] = useState(0)
+  const [airp, setAirp] = useState(0)
+  const [temp, setTemp] = useState(0)
+  const [sunrise, setSunrise] = useState("")
+  const [sunset, setSunset] = useState("")
 
   useEffect(() => {
-    const socket = io("http://localhost:3000")
-    socket.on("message", (res) => {
-      setRealTimeData(res.elements)
-      setLoading(false)
+    socket.on("message", (data) => {
+      const { elements } = data
+      setLight(elements.light)
+      setCo2(elements.co2)
+      setTvoc(elements.tvoc)
+      setHumd(elements.humd)
+      setAirp(elements.airp)
+      setTemp(elements.temp)
+      setSunrise(elements.sunrise)
+      setSunset(elements.sunset)
     })
-    return () => {
-      socket.disconnect()
-    }
-  }, [io])
+  }, [])
 
   const data = {
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -106,9 +114,7 @@ export const Dashboard = () => {
                 <div className="text-3xl text-light-purple font-medium pt-8 pb-4">
                   Carbon Dioxide
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">
-                  {realTimeData.co2}
-                </div>
+                <div className="inline-block text-5xl pr-4 pb-8">{co2}</div>
                 <div className="inline-block text-3xl font-light">ppm</div>
               </div>
             </div>
@@ -125,9 +131,7 @@ export const Dashboard = () => {
                 <div className="text-3xl text-light-purple font-medium pt-8 pb-4">
                   T. V. O. C.
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">
-                  {realTimeData.tvoc}
-                </div>
+                <div className="inline-block text-5xl pr-4 pb-8">{tvoc}</div>
                 <div className="inline-block text-3xl font-light">ppb</div>
               </div>
             </div>
@@ -146,9 +150,7 @@ export const Dashboard = () => {
                 <div className="text-3xl text-light-purple font-medium  pt-8 pb-4">
                   Air Pressure
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">
-                  {realTimeData.airp}
-                </div>
+                <div className="inline-block text-5xl pr-4 pb-8">{airp}</div>
                 <div className="inline-block text-3xl font-light">hPA</div>
               </div>
             </div>
@@ -165,9 +167,7 @@ export const Dashboard = () => {
                 <div className="text-3xl text-light-purple font-medium pt-8 pb-4">
                   Temperature
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">
-                  {realTimeData.temp}
-                </div>
+                <div className="inline-block text-5xl pr-4 pb-8">{temp}</div>
                 <div className="inline-block text-3xl font-light">Cel</div>
               </div>
             </div>
@@ -183,14 +183,14 @@ export const Dashboard = () => {
                     <img className="max-w-[40%] " src="logo192.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Humidity</div>
-                      <div className="font-bold">{realTimeData.humd}%</div>
+                      <div className="font-bold">{humd}%</div>
                     </div>
                   </div>
                   <div className="flex">
                     <img className="max-w-[40%] " src="logo192.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Light Level</div>
-                      <div className="font-bold">{realTimeData.light}</div>
+                      <div className="font-bold">{light}</div>
                     </div>
                   </div>
                 </div>
@@ -202,14 +202,14 @@ export const Dashboard = () => {
                     <img className="max-w-[40%] " src="logo192.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Sunrise</div>
-                      <div className="font-bold">{realTimeData.sunrise}</div>
+                      <div className="font-bold">{sunrise}</div>
                     </div>
                   </div>
                   <div className="flex">
                     <img className="max-w-[40%] " src="logo192.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Sunset</div>
-                      <div className="font-bold">{realTimeData.sunset}</div>
+                      <div className="font-bold">{sunset}</div>
                     </div>
                   </div>
                 </div>
@@ -220,9 +220,18 @@ export const Dashboard = () => {
             </div>
           </div>
           <div className="bg-white w-[60%] rounded-xl p-8">
-            <div className="font-semibold mb-8">
-              Previous Daily Overall Air Quality
+            <div className="flex justify-between">
+              <div className="font-semibold">
+                Previous Daily Overall Air Quality
+              </div>
+              <button
+                className="w-[15%] p-2 bg-light-purple text-white rounded-full"
+                onClick={navigateHistory}
+              >
+                History
+              </button>
             </div>
+
             <Line
               className="max-h-[17rem]"
               data={data}

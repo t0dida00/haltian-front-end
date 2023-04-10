@@ -1,84 +1,34 @@
 import React from "react"
-import { Line } from "react-chartjs-2"
-import {
-  Chart as ChartJS,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-} from "chart.js"
-
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
-
-function Co2Chart() {
-  const co2 = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    datasets: [
-      {
-        data: [400, 410, 420, 430, 440, 450, 460],
-        label: "Carbon Dioxide",
-        backgroundColor: "#F8F8FF",
-        borderColor: "#FF6666",
-        tension: 0.1,
-        fill: true,
-      },
-    ],
-  }
-  return (
-    <div>
-      <Line data={co2}></Line>
-    </div>
-  )
-}
-
-function TempChart() {
-  const temp = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    dataset: [
-      {
-        data: [22, 23, 24, 25, 26, 27, 28],
-        label: "Temperature",
-        backgroundColor: "#F8F8FF",
-        borderColor: "#66FFB2",
-        tension: 0.1,
-        fill: true,
-      },
-    ],
-  }
-  return (
-    <div>
-      <Line data={temp}></Line>
-    </div>
-  )
-}
-
-function HumdChart() {
-  const humd = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    dataset: [
-      {
-        data: [45, 50, 55, 60, 65, 70],
-        label: "Humidity",
-        backgroundColor: "#F8F8FF",
-        borderColor: "#7284FF",
-        tension: 0.1,
-        fill: true,
-      },
-    ],
-  }
-  return (
-    <div>
-      <Line data={humd}></Line>
-    </div>
-  )
-}
+import { useNavigate } from "react-router-dom"
 
 export const History = () => {
+  const navigate = useNavigate()
+
+  const navigateDashboard = () => {
+    navigate("/dashboard")
+  }
+
   return (
-    <div>
-      <Co2Chart />
-      <TempChart />
-      <HumdChart />
+    <div className="bg-[#F8F8FF] h-screen flex flex-col justify-around">
+      <div className="bg-white rounded-xl w-[80%] h-[80%] mx-auto p-8">
+        <div className="flex py-8 justify-between">
+          <div className="text-3xl text-light-purple font-semibold">
+            History
+          </div>
+          <button
+            className="w-[10%] bg-light-purple text-white rounded-full"
+            onClick={navigateDashboard}
+          >
+            Back
+          </button>
+        </div>
+        <div className="grid gap-8 grid-cols-2 grid-rows-2 p-4">
+          <div>Grid 1</div>
+          <div>Grid 2</div>
+          <div>Grid 3</div>
+          <div>Grid 4</div>
+        </div>
+      </div>
     </div>
   )
 }
