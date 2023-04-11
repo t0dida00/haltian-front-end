@@ -8,6 +8,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  ResponsiveContainer,
 } from "recharts"
 import axios from "axios"
 
@@ -24,21 +25,20 @@ export const History = () => {
       .get("http://localhost:3000/history")
       .then((res) => {
         setData(res.data.list)
-        console.log(res.data)
       })
       .catch((err) => {
         console.log(err)
       })
   }, [])
 
-  const co2Data = data.map((item) => ({ time: item.time, CO2: item.CO2 }))
+  const co2Data = data.map((item) => ({ Time: item.time, CO2: item.CO2 }))
   const humidityData = data.map((item) => ({
-    time: item.time,
-    humidity: item.humidity,
+    Time: item.time,
+    Humidity: item.humidity,
   }))
   const temperatureData = data.map((item) => ({
-    time: item.time,
-    temperature: item.temperature,
+    Time: item.time,
+    Temperature: item.temperature,
   }))
 
   return (
@@ -56,32 +56,38 @@ export const History = () => {
           </button>
         </div>
         <div className="grid grid-cols-2 grid-rows-2">
-          <LineChart width={600} height={300} data={co2Data}>
+          <LineChart width={1400} height={300} data={temperatureData}>
             <XAxis dataKey="Time" />
             <YAxis />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="CO2" stroke="#8884d8" />
+            <Line type="monotone" dataKey="Temperature" stroke="#8884d8" />
           </LineChart>
 
-          <LineChart width={600} height={300} data={humidityData}>
-            <XAxis dataKey="Time" />
-            <YAxis />
-            <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="Humidity" stroke="#82ca9d" />
-          </LineChart>
+          <div></div>
 
-          <LineChart width={600} height={300} data={temperatureData}>
-            <XAxis dataKey="Time" />
-            <YAxis />
-            <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="Temperature" stroke="#ffc658" />
-          </LineChart>
+          <ResponsiveContainer>
+            <LineChart data={humidityData}>
+              <XAxis dataKey="Time" />
+              <YAxis />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="Humidity" stroke="#82ca9d" />
+            </LineChart>
+          </ResponsiveContainer>
+
+          <ResponsiveContainer>
+            <LineChart data={co2Data}>
+              <XAxis dataKey="Time" />
+              <YAxis />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="CO2" stroke="#ffc658" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>
