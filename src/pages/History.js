@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import ReactDOM, { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import {
   LineChart,
   Line,
@@ -20,21 +20,26 @@ export const History = () => {
   const [data, setData] = useState([])
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get("http://localhost:3000/history/")
-      } catch (err) {
+    axios
+      .get("http://localhost:3000/history")
+      .then((res) => {
+        setData(res.data.list)
+        console.log(res.data)
+      })
+      .catch((err) => {
         console.log(err)
-      }
-    }
+      })
   }, [])
 
-  const filterData = (key) => {
-    return data.map((item) => ({
-      time: item.time,
-      [key]: item[key],
-    }))
-  }
+  const co2Data = data.map((item) => ({ time: item.time, CO2: item.CO2 }))
+  const humidityData = data.map((item) => ({
+    time: item.time,
+    humidity: item.humidity,
+  }))
+  const temperatureData = data.map((item) => ({
+    time: item.time,
+    temperature: item.temperature,
+  }))
 
   return (
     <div className="bg-[#F8F8FF] h-screen flex flex-col justify-around">
@@ -51,8 +56,8 @@ export const History = () => {
           </button>
         </div>
         <div className="grid grid-cols-2 grid-rows-2">
-          <LineChart width={600} height={300} data={filterData("CO2")}>
-            <XAxis dataKey="time" />
+          <LineChart width={600} height={300} data={co2Data}>
+            <XAxis dataKey="Time" />
             <YAxis />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
@@ -60,26 +65,22 @@ export const History = () => {
             <Line type="monotone" dataKey="CO2" stroke="#8884d8" />
           </LineChart>
 
-          <LineChart width={600} height={300} data={filterData("humidity")}>
-            <XAxis dataKey="time" />
+          <LineChart width={600} height={300} data={humidityData}>
+            <XAxis dataKey="Time" />
             <YAxis />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="humidity" stroke="#82ca9d" />
+            <Line type="monotone" dataKey="Humidity" stroke="#82ca9d" />
           </LineChart>
 
-          <LineChart
-            width={"50%"}
-            height={300}
-            data={filterData("temperature")}
-          >
-            <XAxis dataKey="time" />
+          <LineChart width={600} height={300} data={temperatureData}>
+            <XAxis dataKey="Time" />
             <YAxis />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="temperature" stroke="#ffc658" />
+            <Line type="monotone" dataKey="Temperature" stroke="#ffc658" />
           </LineChart>
         </div>
       </div>
