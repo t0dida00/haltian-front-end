@@ -10,7 +10,8 @@ import {
   LinearScale,
   PointElement,
 } from "chart.js"
-import io from "socket.io-client"
+
+import socket from "./Socket"
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
 
@@ -33,7 +34,6 @@ export const Dashboard = () => {
   })
 
   useEffect(() => {
-    const socket = io("http://localhost:3000")
     socket.on("message", (data) => {
       const { light, co2, tvoc, humd, airp, temp, sunrise, sunset } =
         JSON.parse(data)
@@ -238,7 +238,7 @@ export const Dashboard = () => {
               </button>
             </div>
 
-            <Line className="max-h-[78%]" data={data} options={options}></Line>
+            <img className="max-h-64 w-full" src="wallpaper.jpg" alt="img" />
           </div>
         </div>
       </div>

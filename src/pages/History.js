@@ -31,22 +31,30 @@ export const History = () => {
       })
   }, [])
 
-  const co2Data = data.map((item) => ({ Time: item.time, CO2: item.CO2 }))
-  const humidityData = data.map((item) => ({
-    Time: item.time,
-    Humidity: item.humidity,
-  }))
-  const temperatureData = data.map((item) => ({
-    Time: item.time,
-    Temperature: item.temperature,
-  }))
+  const co2Data = data.map((item) => {
+    const date = new Date(item.time)
+    const formattedTime = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+    return { Time: formattedTime, CO2: item.CO2 }
+  })
+
+  const humidityData = data.map((item) => {
+    const date = new Date(item.time)
+    const formattedTime = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+    return { Time: formattedTime, Humidity: item.humidity }
+  })
+
+  const temperatureData = data.map((item) => {
+    const date = new Date(item.time)
+    const formattedTime = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+    return { Time: formattedTime, Temperature: item.temperature }
+  })
 
   return (
     <div className="bg-[#F8F8FF] h-screen flex flex-col justify-around">
       <div className="bg-white rounded-xl w-[80%] h-[80%] mx-auto p-8">
         <div className="flex py-8 justify-between">
           <div className="text-3xl text-light-purple font-semibold">
-            History
+            Haltian Demo
           </div>
           <button
             className="w-[10%] bg-light-purple text-white rounded-full"
