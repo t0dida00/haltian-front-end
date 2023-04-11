@@ -12,8 +12,6 @@ import {
 } from "chart.js"
 import io from "socket.io-client"
 
-const socket = io.connect("http://localhost:3000")
-
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
 
 export const Dashboard = () => {
@@ -23,27 +21,27 @@ export const Dashboard = () => {
     navigate("/history")
   }
 
-  const [light, setLight] = useState(0)
-  const [co2, setCo2] = useState(0)
-  const [tvoc, setTvoc] = useState(0)
-  const [humd, setHumd] = useState(0)
-  const [airp, setAirp] = useState(0)
-  const [temp, setTemp] = useState(0)
-  const [sunrise, setSunrise] = useState("")
-  const [sunset, setSunset] = useState("")
+  const [realtimeData, setRealtimeData] = useState({
+    light: null,
+    co2: null,
+    tvoc: null,
+    humd: null,
+    airp: null,
+    temp: null,
+    sunrise: null,
+    sunset: null,
+  })
 
   useEffect(() => {
+    const socket = io("http://localhost:3000")
     socket.on("message", (data) => {
-      const { elements } = data
-      setLight(elements.light)
-      setCo2(elements.co2)
-      setTvoc(elements.tvoc)
-      setHumd(elements.humd)
-      setAirp(elements.airp)
-      setTemp(elements.temp)
-      setSunrise(elements.sunrise)
-      setSunset(elements.sunset)
+      const { light, co2, tvoc, humd, airp, temp, sunrise, sunset } =
+        JSON.parse(data)
+      setRealtimeData({ light, co2, tvoc, humd, airp, temp, sunrise, sunset })
     })
+    return () => {
+      socket.disconnect()
+    }
   }, [])
 
   const data = {
@@ -72,7 +70,7 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="bg-[#F8F8FF] max-h-screen">
+    <div className="bg-[#F8F8FF] h-screen">
       <div className="py-12 px-32">
         <div className="text-light-purple font-bold text-5xl font-sans mb-12">
           Air Quality Measure
@@ -102,36 +100,40 @@ export const Dashboard = () => {
 
           <div className="w-[28%]">
             <div className="bg-white rounded-xl flex py-4 mb-8">
-              <div className="flex align-middle justify-center">
+              <div className="flex align-middle justify-center w-[50%]">
                 <img
-                  className="max-w-[65%] align-middle m-auto"
-                  src="logo192.png"
+                  className="w-[55%] align-middle m-auto"
+                  src="co2-cloud.png"
                   alt="img"
                 />
               </div>
 
               <div>
-                <div className="text-3xl text-light-purple font-medium pt-8 pb-4">
+                <div className="text-3xl text-light-purple font-medium pt-4 pb-4">
                   Carbon Dioxide
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">{co2}</div>
+                <div className="inline-block text-5xl pr-4 pb-8">
+                  {realtimeData.co2}
+                </div>
                 <div className="inline-block text-3xl font-light">ppm</div>
               </div>
             </div>
 
             <div className="bg-white rounded-xl flex py-4">
-              <div className="flex align-middle justify-center">
+              <div className="flex align-middle justify-center w-[50%]">
                 <img
-                  className="max-w-[65%] align-middle m-auto"
-                  src="logo192.png"
+                  className="w-[55%] align-middle m-auto"
+                  src="flask.png"
                   alt="img"
                 />
               </div>
               <div>
-                <div className="text-3xl text-light-purple font-medium pt-8 pb-4">
+                <div className="text-3xl text-light-purple font-medium pt-4 pb-4">
                   T. V. O. C.
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">{tvoc}</div>
+                <div className="inline-block text-5xl pr-4 pb-8">
+                  {realtimeData.tvoc}
+                </div>
                 <div className="inline-block text-3xl font-light">ppb</div>
               </div>
             </div>
@@ -139,35 +141,39 @@ export const Dashboard = () => {
 
           <div className="w-[28%]">
             <div className="bg-white rounded-xl flex py-4 mb-8">
-              <div className="flex align-middle justify-center">
+              <div className="flex align-middle justify-center w-[50%]">
                 <img
-                  className="max-w-[65%] align-middle m-auto"
-                  src="logo192.png"
+                  className="max-w-[55%] align-middle m-auto"
+                  src="barometer.png"
                   alt="img"
                 />
               </div>
               <div>
-                <div className="text-3xl text-light-purple font-medium  pt-8 pb-4">
+                <div className="text-3xl text-light-purple font-medium pt-4 pb-4">
                   Air Pressure
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">{airp}</div>
+                <div className="inline-block text-5xl pr-4 pb-8">
+                  {realtimeData.airp}
+                </div>
                 <div className="inline-block text-3xl font-light">hPA</div>
               </div>
             </div>
 
             <div className="bg-white rounded-xl flex py-4">
-              <div className="flex align-middle justify-center">
+              <div className="flex align-middle justify-center w-[50%]">
                 <img
-                  className="max-w-[65%] align-middle m-auto"
-                  src="logo192.png"
+                  className="max-w-[55%] align-middle m-auto"
+                  src="thermometer.png"
                   alt="img"
                 />
               </div>
               <div>
-                <div className="text-3xl text-light-purple font-medium pt-8 pb-4">
+                <div className="text-3xl text-light-purple font-medium pt-4 pb-4">
                   Temperature
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">{temp}</div>
+                <div className="inline-block text-5xl pr-4 pb-8">
+                  {realtimeData.temp}
+                </div>
                 <div className="inline-block text-3xl font-light">Cel</div>
               </div>
             </div>
@@ -180,17 +186,17 @@ export const Dashboard = () => {
               <div className="flex w-[40%] py-8">
                 <div className="border-r-2 border-r-black">
                   <div className="flex pb-4">
-                    <img className="max-w-[40%] " src="logo192.png" alt="img" />
+                    <img className="w-[30%] " src="humidity.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Humidity</div>
-                      <div className="font-bold">{humd}%</div>
+                      <div className="font-bold">{realtimeData.humd}%</div>
                     </div>
                   </div>
                   <div className="flex">
-                    <img className="max-w-[40%] " src="logo192.png" alt="img" />
+                    <img className="w-[30%] " src="lamp.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Light Level</div>
-                      <div className="font-bold">{light}</div>
+                      <div className="font-bold">{realtimeData.light}</div>
                     </div>
                   </div>
                 </div>
@@ -199,17 +205,17 @@ export const Dashboard = () => {
               <div className="flex w-[40%] py-8">
                 <div>
                   <div className="flex pb-4">
-                    <img className="max-w-[40%] " src="logo192.png" alt="img" />
+                    <img className="w-[30%] " src="sunrise.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Sunrise</div>
-                      <div className="font-bold">{sunrise}</div>
+                      <div className="font-bold">{realtimeData.sunrise}</div>
                     </div>
                   </div>
                   <div className="flex">
-                    <img className="max-w-[40%] " src="logo192.png" alt="img" />
+                    <img className="w-[30%] " src="sunset.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Sunset</div>
-                      <div className="font-bold">{sunset}</div>
+                      <div className="font-bold">{realtimeData.sunset}</div>
                     </div>
                   </div>
                 </div>
@@ -219,7 +225,7 @@ export const Dashboard = () => {
               Suggestions
             </div>
           </div>
-          <div className="bg-white w-[60%] rounded-xl p-8">
+          <div className="bg-white w-[60%] rounded-xl p-8 h-[40%]">
             <div className="flex justify-between">
               <div className="font-semibold">
                 Previous Daily Overall Air Quality
@@ -232,11 +238,7 @@ export const Dashboard = () => {
               </button>
             </div>
 
-            <Line
-              className="max-h-[17rem]"
-              data={data}
-              options={options}
-            ></Line>
+            <Line className="max-h-[78%]" data={data} options={options}></Line>
           </div>
         </div>
       </div>
