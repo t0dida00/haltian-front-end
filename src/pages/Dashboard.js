@@ -2,14 +2,6 @@ import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar"
 import "react-circular-progressbar/dist/styles.css"
-import { Line } from "react-chartjs-2"
-import {
-  Chart as ChartJS,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-} from "chart.js"
 
 import socket from "./Socket"
 
@@ -35,13 +27,12 @@ export const Dashboard = () => {
 
   useEffect(() => {
     socket.on("message", (data) => {
+      const temperary = JSON.parse(data)
       const { light, co2, tvoc, humd, airp, temp, sunrise, sunset } =
-        JSON.parse(data)
+        temperary.elements
       setRealtimeData({ light, co2, tvoc, humd, airp, temp, sunrise, sunset })
     })
-    return () => {
-      socket.disconnect()
-    }
+    return () => {}
   }, [])
 
   const data = {
