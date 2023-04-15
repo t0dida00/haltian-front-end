@@ -21,7 +21,7 @@ import {
   PointElement,
 } from "chart.js"
 import axios from "axios"
-import { toast } from "react-toastify"
+import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import socket from "./Socket"
 
@@ -59,17 +59,18 @@ export const Dashboard = () => {
       const { light, co2, tvoc, humd, airp, temp, sunrise, sunset } =
         temperary.elements
       setRealtimeData({ light, co2, tvoc, humd, airp, temp, sunrise, sunset })
+      if (co2 > co2Threshhold) {
+        toast.error("CO2 is too high!", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        })
+      }
+      if (tvoc > tvocThreshhold) {
+        toast.error("TVOC is too high!", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        })
+      }
     })
-    if (co2 > co2Threshhold) {
-      toast.error("CO2 is too high!", {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      })
-    }
-    if (tvoc > tvocThreshhold) {
-      toast.error("TVOC is too high!", {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      })
-    }
+
     return () => {}
   }, [])
 

@@ -51,11 +51,12 @@ export const History = () => {
 
   return (
     <div className="bg-[#F8F8FF] h-screen flex flex-col justify-around">
+      <div className="text-5xl text-light-purple font-bold mx-auto">
+        HALTIAN DEMO
+      </div>
       <div className="bg-white rounded-xl w-[80%] h-[80%] mx-auto p-8">
         <div className="flex py-8 justify-between">
-          <div className="text-3xl text-light-purple font-semibold">
-            Haltian Demo
-          </div>
+          <div className="text-2xl font-semibold">History Data</div>
           <button
             className="w-[10%] bg-light-purple text-white rounded-full"
             onClick={navigateDashboard}
