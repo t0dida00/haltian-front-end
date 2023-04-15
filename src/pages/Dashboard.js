@@ -2,7 +2,27 @@ import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar"
 import "react-circular-progressbar/dist/styles.css"
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts"
 
+import {
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+} from "chart.js"
+import axios from "axios"
+import { toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import socket from "./Socket"
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
@@ -25,6 +45,14 @@ export const Dashboard = () => {
     sunset: null,
   })
 
+  const co2Threshhold = 5000
+  const tvocThreshhold = 350
+
+  const [alertData, setAlertData] = useState({
+    type: null,
+    message: null,
+  })
+
   useEffect(() => {
     socket.on("message", (data) => {
       const temperary = JSON.parse(data)
@@ -32,8 +60,37 @@ export const Dashboard = () => {
         temperary.elements
       setRealtimeData({ light, co2, tvoc, humd, airp, temp, sunrise, sunset })
     })
+    if (co2 > co2Threshhold) {
+      toast.error("CO2 is too high!", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      })
+    }
+    if (tvoc > tvocThreshhold) {
+      toast.error("TVOC is too high!", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      })
+    }
     return () => {}
   }, [])
+
+  const [tempData, setTempData] = useState([])
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/history")
+      .then((res) => {
+        setTempData(res.data.list)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
+
+  const temperatureData = tempData.map((item) => {
+    const date = new Date(item.time)
+    const formattedTime = `${date.toLocaleTimeString()}`
+    return { Time: formattedTime, Temperature: item.temperature }
+  })
 
   const data = {
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -48,21 +105,10 @@ export const Dashboard = () => {
     ],
   }
 
-  const options = {
-    plugins: {
-      legend: true,
-    },
-    scales: {
-      y: {
-        min: 50,
-        max: 100,
-      },
-    },
-  }
-
   return (
     <div className="bg-[#F8F8FF] h-screen">
       <div className="py-12 px-32">
+        <ToastContainer autoClose={30000} />
         <div className="text-light-purple font-bold text-5xl font-sans mb-12">
           Air Quality Measure
         </div>
@@ -218,9 +264,7 @@ export const Dashboard = () => {
           </div>
           <div className="bg-white w-[60%] rounded-xl p-8 h-[40%]">
             <div className="flex justify-between">
-              <div className="font-semibold">
-                Previous Daily Overall Air Quality
-              </div>
+              <div className="font-semibold">Today Temperature</div>
               <button
                 className="w-[15%] p-2 bg-light-purple text-white rounded-full"
                 onClick={navigateHistory}
@@ -229,7 +273,16 @@ export const Dashboard = () => {
               </button>
             </div>
 
-            <img className="max-h-64 w-full" src="wallpaper.jpg" alt="img" />
+            <ResponsiveContainer width="100%" height={350}>
+              <LineChart data={temperatureData}>
+                <XAxis dataKey="Time" />
+                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="Temperature" stroke="#8884d8" />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>

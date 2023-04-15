@@ -64,14 +64,16 @@ export const History = () => {
           </button>
         </div>
         <div className="grid grid-cols-2 grid-rows-2">
-          <LineChart width={1400} height={300} data={temperatureData}>
-            <XAxis dataKey="Time" />
-            <YAxis />
-            <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="Temperature" stroke="#8884d8" />
-          </LineChart>
+          <ResponsiveContainer width="200%" height={300}>
+            <LineChart data={temperatureData}>
+              <XAxis dataKey="Time" />
+              <YAxis />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="Temperature" stroke="#8884d8" />
+            </LineChart>
+          </ResponsiveContainer>
 
           <div></div>
 
