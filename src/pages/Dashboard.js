@@ -27,7 +27,7 @@ import socket from "./Socket"
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
 
-export const Dashboard = () => {
+export const Dashboard = ({ historyData }) => {
   const navigate = useNavigate()
 
   const navigateHistory = () => {
@@ -76,7 +76,7 @@ export const Dashboard = () => {
 
   const [tempData, setTempData] = useState([])
 
-  useEffect(() => {
+  const fetchTempData = () => {
     axios
       .get("http://localhost:3000/history")
       .then((res) => {
@@ -85,6 +85,10 @@ export const Dashboard = () => {
       .catch((err) => {
         console.log(err)
       })
+  }
+
+  useEffect(() => {
+    fetchTempData()
   }, [])
 
   const temperatureData = tempData.map((item) => {
