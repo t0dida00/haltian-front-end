@@ -12,7 +12,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts"
-
 import {
   Chart as ChartJS,
   LineElement,
@@ -21,19 +20,15 @@ import {
   PointElement,
 } from "chart.js"
 import axios from "axios"
-import { toast, ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 import socket from "./Socket"
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
 
 export const Dashboard = ({ historyData }) => {
   const navigate = useNavigate()
-
   const navigateHistory = () => {
     navigate("/history")
   }
-
   const navigateConnection = () => {
     navigate("/")
   }
@@ -48,9 +43,15 @@ export const Dashboard = ({ historyData }) => {
     sunrise: null,
     sunset: null,
   })
-
+  const [co2Alert, setCo2Alert] = useState(true)
+  const [tvocAlert, setTvocAlert] = useState(false)
   const co2Threshhold = 5000
   const tvocThreshhold = 350
+
+  function handleDismiss() {
+    setCo2Alert(null)
+    setTvocAlert(null)
+  }
 
   useEffect(() => {
     socket.on("message", (data) => {
@@ -59,22 +60,18 @@ export const Dashboard = ({ historyData }) => {
         temperary.elements
       setRealtimeData({ light, co2, tvoc, humd, airp, temp, sunrise, sunset })
       if (co2 > co2Threshhold) {
-        toast.error("CO2 is too high!", {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        })
-      }
-      if (tvoc > tvocThreshhold) {
-        toast.error("TVOC is too high!", {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        })
+        setCo2Alert(true)
+      } else if (tvoc > tvocThreshhold) {
+        setTvocAlert(true)
+      } else {
+        setCo2Alert(false)
+        setTvocAlert(false)
       }
     })
-
     return () => {}
   }, [])
 
   const [tempData, setTempData] = useState([])
-
   const fetchTempData = () => {
     axios
       .get("http://localhost:3000/history")
@@ -85,11 +82,9 @@ export const Dashboard = ({ historyData }) => {
         console.log(err)
       })
   }
-
   useEffect(() => {
     fetchTempData()
   }, [])
-
   const temperatureData = tempData.map((item) => {
     const date = new Date(item.time)
     const formattedTime = `${date.toLocaleTimeString()}`
@@ -111,8 +106,33 @@ export const Dashboard = ({ historyData }) => {
 
   return (
     <div className="bg-[#F8F8FF] h-screen">
+      {co2Alert && (
+        <div className="fixed z-50 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-red-600 text-white text-lg font-bold p-4 rounded-lg shadow-lg flex items-center justify-between">
+            <p>CO2 levels are too high. Please ventilate the room.</p>
+            <button
+              className="text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 ml-4"
+              onClick={handleDismiss}
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
+      {tvocAlert && (
+        <div className="fixed z-50 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-red-600 text-white text-lg font-bold p-4 rounded-lg shadow-lg flex items-center justify-between">
+            <p>TVOC levels are too high. Please ventilate the room.</p>
+            <button
+              className="text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 ml-4"
+              onClick={handleDismiss}
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
       <div className="py-12 px-32">
-        <ToastContainer />
         <div className="flex justify-between">
           <div className="text-light-purple font-bold text-5xl font-sans mb-12">
             HALTIAN DEMO
