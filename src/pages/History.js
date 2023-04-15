@@ -33,19 +33,19 @@ export const History = () => {
 
   const co2Data = data.map((item) => {
     const date = new Date(item.time)
-    const formattedTime = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+    const formattedTime = `${date.toLocaleTimeString()}`
     return { Time: formattedTime, CO2: item.CO2 }
   })
 
   const humidityData = data.map((item) => {
     const date = new Date(item.time)
-    const formattedTime = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+    const formattedTime = `${date.toLocaleTimeString()}`
     return { Time: formattedTime, Humidity: item.humidity }
   })
 
   const temperatureData = data.map((item) => {
     const date = new Date(item.time)
-    const formattedTime = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+    const formattedTime = `${date.toLocaleTimeString()}`
     return { Time: formattedTime, Temperature: item.temperature }
   })
 
