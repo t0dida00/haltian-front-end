@@ -34,6 +34,10 @@ export const Dashboard = ({ historyData }) => {
     navigate("/history")
   }
 
+  const navigateConnection = () => {
+    navigate("/")
+  }
+
   const [realtimeData, setRealtimeData] = useState({
     light: null,
     co2: null,
@@ -47,11 +51,6 @@ export const Dashboard = ({ historyData }) => {
 
   const co2Threshhold = 5000
   const tvocThreshhold = 350
-
-  const [alertData, setAlertData] = useState({
-    type: null,
-    message: null,
-  })
 
   useEffect(() => {
     socket.on("message", (data) => {
@@ -113,9 +112,19 @@ export const Dashboard = ({ historyData }) => {
   return (
     <div className="bg-[#F8F8FF] h-screen">
       <div className="py-12 px-32">
-        <ToastContainer autoClose={30000} />
-        <div className="text-light-purple font-bold text-5xl font-sans mb-12">
-          Air Quality Measure
+        <ToastContainer />
+        <div className="flex justify-between">
+          <div className="text-light-purple font-bold text-5xl font-sans mb-12">
+            HALTIAN DEMO
+          </div>
+          <div className="w-[10%]">
+            <button
+              className="rounded-xl bg-light-purple text-white h-[50%] w-full"
+              onClick={navigateConnection}
+            >
+              Disconnect
+            </button>
+          </div>
         </div>
 
         <div className="flex justify-between mb-16">
