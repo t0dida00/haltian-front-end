@@ -15,11 +15,18 @@ This will start the website on your local machine, accessible at http://localhos
 
 ## Usage
 
-To view the air quality data, first fill in the connection form on the home page.
+To view the air quality data, first fill in the connection form on the home page then click "Connect". The website will navigate to the dashboard page that displays the lastest air quality measurements for Carbon Dioxide, TVOC, Humidity, Temperature, Air Pressure, Sunrise, and Sunset time.
+
+Users can also view historical data and trends over time by clicking on the "History" button. This will display a graph of air quality measurements in the past.
 
 ## Contributing
 
 If you would like to contribute to this project, please fork the repository and submit a pull request. Before submitting your changes, please make sure that they adhere to the project's coding standards and that all tests pass.
+
+## Authors
+
+- [@onyxzz](https://www.github.com/onyxzz)
+- [@t0dida00](https://www.github.com/t0dida00)
 
 ## License
 
@@ -27,4 +34,7 @@ This project is released under the MIT License.
 
 ## Contact
 
-If you have any questions or feedback, please email us at t0phtr00@students.oamk.fi or t0dida00@students.oamk.fi
+If you have any questions or feedback, please email us at
+
+- t0phtr00@students.oamk.fi
+- t0dida00@students.oamk.fi
