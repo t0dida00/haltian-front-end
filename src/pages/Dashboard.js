@@ -43,6 +43,7 @@ export const Dashboard = ({ historyData }) => {
     sunrise: null,
     sunset: null,
   })
+  const [alertMessage, setAlertMessage] = useState(null)
   const [co2Alert, setCo2Alert] = useState(true)
   const [tvocAlert, setTvocAlert] = useState(false)
   const co2Threshhold = 5000
@@ -58,11 +59,14 @@ export const Dashboard = ({ historyData }) => {
       const temperary = JSON.parse(data)
       const { light, co2, tvoc, humd, airp, temp, sunrise, sunset } =
         temperary.elements
+      const temperaryAlert = JSON.stringify(temperary.alerts)
       setRealtimeData({ light, co2, tvoc, humd, airp, temp, sunrise, sunset })
       if (co2 > co2Threshhold) {
         setCo2Alert(true)
+        setAlertMessage(temperaryAlert)
       } else if (tvoc > tvocThreshhold) {
         setTvocAlert(true)
+        setAlertMessage(temperaryAlert)
       } else {
         setCo2Alert(false)
         setTvocAlert(false)
@@ -108,8 +112,8 @@ export const Dashboard = ({ historyData }) => {
     <div className="bg-[#F8F8FF] h-screen">
       {co2Alert && (
         <div className="fixed z-50 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-red-600 text-white text-lg font-bold p-4 rounded-lg shadow-lg flex items-center justify-between">
-            <p>CO2 levels are too high. Please ventilate the room.</p>
+          <div className="bg-red-600 text-white font-bold p-4 rounded-lg shadow-lg flex items-center justify-between">
+            <p className="text-xl">{alertMessage}</p>
             <button
               className="text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 ml-4"
               onClick={handleDismiss}
@@ -121,8 +125,8 @@ export const Dashboard = ({ historyData }) => {
       )}
       {tvocAlert && (
         <div className="fixed z-50 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-red-600 text-white text-lg font-bold p-4 rounded-lg shadow-lg flex items-center justify-between">
-            <p>TVOC levels are too high. Please ventilate the room.</p>
+          <div className="bg-red-600 text-white font-bold p-4 rounded-lg shadow-lg flex items-center justify-between">
+            <p className="text-xl">{alertMessage}</p>
             <button
               className="text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 ml-4"
               onClick={handleDismiss}
