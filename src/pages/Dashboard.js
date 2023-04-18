@@ -43,8 +43,8 @@ export const Dashboard = ({ historyData }) => {
     sunrise: null,
     sunset: null,
   })
-  const [alertMessage, setAlertMessage] = useState(null)
-  const [co2Alert, setCo2Alert] = useState(true)
+  const [alertMessage, setAlertMessage] = useState("")
+  const [co2Alert, setCo2Alert] = useState(false)
   const [tvocAlert, setTvocAlert] = useState(false)
   const co2Threshhold = 5000
   const tvocThreshhold = 350
