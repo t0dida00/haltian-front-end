@@ -19,7 +19,6 @@ import {
   LinearScale,
   PointElement,
 } from "chart.js"
-import axios from "axios"
 import socket from "./Socket"
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
@@ -77,13 +76,13 @@ export const Dashboard = ({ historyData }) => {
 
   const [tempData, setTempData] = useState([])
   const fetchTempData = () => {
-    axios
-      .get("http://localhost:3000/history")
-      .then((res) => {
-        setTempData(res.data.list)
+    fetch("http://localhost:3000/history")
+      .then((response) => response.json())
+      .then((data) => {
+        setTempData(data.list)
       })
-      .catch((err) => {
-        console.log(err)
+      .catch((error) => {
+        console.error(error)
       })
   }
   useEffect(() => {

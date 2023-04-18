@@ -10,7 +10,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts"
-import axios from "axios"
 
 export const History = () => {
   const navigate = useNavigate()
@@ -21,13 +20,13 @@ export const History = () => {
   const [data, setData] = useState([])
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/history")
-      .then((res) => {
-        setData(res.data.list)
+    fetch("http://localhost:3000/history")
+      .then((response) => response.json())
+      .then((data) => {
+        setData(data.list)
       })
-      .catch((err) => {
-        console.log(err)
+      .catch((error) => {
+        console.error(error)
       })
   }, [])
 
