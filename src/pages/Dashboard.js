@@ -50,8 +50,8 @@ export const Dashboard = ({ historyData }) => {
   const tvocThreshhold = 350
 
   function handleDismiss() {
-    setCo2Alert(null)
-    setTvocAlert(null)
+    setCo2Alert(false)
+    setTvocAlert(false)
   }
 
   useEffect(() => {
