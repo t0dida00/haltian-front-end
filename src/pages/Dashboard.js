@@ -27,6 +27,7 @@ export const Dashboard = ({ historyData }) => {
   const navigate = useNavigate()
 
   const navigateHistory = () => {
+    handleSaveData()
     navigate("/history")
   }
 
@@ -97,9 +98,26 @@ export const Dashboard = ({ historyData }) => {
         setCo2Alert(false)
         setTvocAlert(false)
       }
+
+      localStorage.setItem("realtimeData", JSON.stringify(realtimeData))
     })
 
     return () => {}
+  }, [])
+
+  const handleSaveData = () => {
+    localStorage.setItem("realtimeData", JSON.stringify(realtimeData))
+  }
+
+  const getDataFromStorage = () => {
+    const storedData = localStorage.getItem("realtimeData")
+    if (storedData) {
+      setRealtimeData(JSON.parse(storedData))
+    }
+  }
+
+  useEffect(() => {
+    getDataFromStorage()
   }, [])
 
   const [tempData, setTempData] = useState([])
