@@ -25,6 +25,7 @@ ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
 
 export const Dashboard = ({ historyData }) => {
   const navigate = useNavigate()
+
   const navigateHistory = () => {
     navigate("/history")
   }
@@ -42,6 +43,7 @@ export const Dashboard = ({ historyData }) => {
     disconnect()
     navigate("/")
   }
+
   const [realtimeData, setRealtimeData] = useState({
     light: null,
     co2: null,
@@ -52,10 +54,12 @@ export const Dashboard = ({ historyData }) => {
     sunrise: null,
     sunset: null,
   })
+
   const [aqi, setAqi] = useState(null)
   const [quality, setQuality] = useState(null)
   const [co2Alert, setCo2Alert] = useState(false)
   const [tvocAlert, setTvocAlert] = useState(false)
+
   const co2Threshhold = 5000
   const tvocThreshhold = 350
 
@@ -66,11 +70,11 @@ export const Dashboard = ({ historyData }) => {
 
   useEffect(() => {
     socket.on("message", (data) => {
-      const temperary = JSON.parse(data)
+      const temporary = JSON.parse(data)
       const { light, co2, tvoc, humd, airp, temp, sunrise, sunset } =
-        temperary.elements
-      const aqi = temperary.AQI
-      const quality = temperary.Quality
+        temporary.elements
+      const aqi = temporary.AQI
+      const quality = temporary.Quality
 
       setRealtimeData({
         light,
@@ -94,10 +98,12 @@ export const Dashboard = ({ historyData }) => {
         setTvocAlert(false)
       }
     })
+
     return () => {}
   }, [])
 
   const [tempData, setTempData] = useState([])
+
   const fetchTempData = () => {
     fetch("https://air-quality.azurewebsites.net/history")
       .then((response) => response.json())
