@@ -28,10 +28,13 @@ export const Connection = () => {
     formData.append("cert", cert)
     formData.append("key", key)
 
-    const response = await fetch("http://localhost:3000/set-up", {
-      method: "POST",
-      body: formData,
-    })
+    const response = await fetch(
+      "https://air-quality.azurewebsites.net/set-up",
+      {
+        method: "POST",
+        body: formData,
+      }
+    )
   }
 
   return (

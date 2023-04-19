@@ -20,7 +20,7 @@ export const History = () => {
   const [data, setData] = useState([])
 
   useEffect(() => {
-    fetch("http://localhost:3000/history")
+    fetch("https://air-quality.azurewebsites.net/history")
       .then((response) => response.json())
       .then((data) => {
         setData(data.list)

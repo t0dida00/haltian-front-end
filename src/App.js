@@ -1,4 +1,3 @@
-import "./App.css"
 import { Route, Routes } from "react-router-dom"
 import { Connection } from "./pages/Connection"
 import { Dashboard } from "./pages/Dashboard"

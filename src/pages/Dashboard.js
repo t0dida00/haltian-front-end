@@ -76,7 +76,7 @@ export const Dashboard = ({ historyData }) => {
 
   const [tempData, setTempData] = useState([])
   const fetchTempData = () => {
-    fetch("http://localhost:3000/history")
+    fetch("https://air-quality.azurewebsites.net/history")
       .then((response) => response.json())
       .then((data) => {
         setTempData(data.list)
