@@ -38,29 +38,19 @@ export const Dashboard = ({ historyData }) => {
   }
 
   const navigateConnection = () => {
-    if (socket) {
-      socket.disconnect()
-    }
     localStorage.clear()
-    setRealtimeData(null)
     disconnect()
     navigate("/")
   }
-
-  const [realtimeData, setRealtimeData] = useState(() => {
-    const storedData = localStorage.getItem("realtimeData")
-    return storedData
-      ? JSON.parse(storedData)
-      : {
-          light: null,
-          co2: null,
-          tvoc: null,
-          humd: null,
-          airp: null,
-          temp: null,
-          sunrise: null,
-          sunset: null,
-        }
+  const [realtimeData, setRealtimeData] = useState({
+    light: null,
+    co2: null,
+    tvoc: null,
+    humd: null,
+    airp: null,
+    temp: null,
+    sunrise: null,
+    sunset: null,
   })
   const [aqi, setAqi] = useState(null)
   const [quality, setQuality] = useState(null)
@@ -74,48 +64,38 @@ export const Dashboard = ({ historyData }) => {
     setTvocAlert(false)
   }
 
-  function handleSocketMessage(data) {
-    const temperary = JSON.parse(data)
-    const { light, co2, tvoc, humd, airp, temp, sunrise, sunset } =
-      temperary.elements
-    const aqi = temperary.AQI
-    const quality = temperary.Quality
-
-    setRealtimeData({
-      light,
-      co2,
-      tvoc: Math.round(tvoc),
-      humd,
-      airp: Math.round(airp),
-      temp,
-      sunrise,
-      sunset,
-    })
-    setAqi(aqi)
-    setQuality(quality)
-
-    if (co2 > co2Threshhold) {
-      setCo2Alert(true)
-    } else if (tvoc > tvocThreshhold) {
-      setTvocAlert(true)
-    } else {
-      setCo2Alert(false)
-      setTvocAlert(false)
-    }
-  }
-
   useEffect(() => {
-    socket.on("message", handleSocketMessage)
+    socket.on("message", (data) => {
+      const temperary = JSON.parse(data)
+      const { light, co2, tvoc, humd, airp, temp, sunrise, sunset } =
+        temperary.elements
+      const aqi = temperary.AQI
+      const quality = temperary.Quality
 
-    const handleBeforeUnload = () => {
-      localStorage.setItem("realtimeData", JSON.stringify(realtimeData))
-    }
-    window.addEventListener("beforeunload", handleBeforeUnload)
-    return () => {
-      socket.off("message", handleSocketMessage)
-      window.removeEventListener("beforeunload", handleBeforeUnload)
-    }
-  }, [realtimeData])
+      setRealtimeData({
+        light,
+        co2,
+        tvoc,
+        humd,
+        airp: Math.round(airp),
+        temp,
+        sunrise,
+        sunset,
+      })
+      setAqi(aqi)
+      setQuality(quality)
+
+      if (co2 > co2Threshhold) {
+        setCo2Alert(true)
+      } else if (tvoc > tvocThreshhold) {
+        setTvocAlert(true)
+      } else {
+        setCo2Alert(false)
+        setTvocAlert(false)
+      }
+    })
+    return () => {}
+  }, [])
 
   const [tempData, setTempData] = useState([])
   const fetchTempData = () => {
@@ -128,9 +108,11 @@ export const Dashboard = ({ historyData }) => {
         console.error(error)
       })
   }
+
   useEffect(() => {
     fetchTempData()
   }, [])
+
   const temperatureData = tempData.map((item) => {
     const date = new Date(item.time)
     const formattedTime = `${date.toLocaleTimeString()}`
@@ -189,7 +171,7 @@ export const Dashboard = ({ historyData }) => {
             <CircularProgressbar
               className="max-w-[55%] mx-auto"
               value={aqi || 100}
-              text={`${aqi}%` || "100%"}
+              text={`${aqi}%`}
               styles={buildStyles({
                 textColor: "#7284FF",
                 pathColor: "#7284FF",
