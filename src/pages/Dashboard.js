@@ -28,23 +28,42 @@ export const Dashboard = ({ historyData }) => {
   const navigateHistory = () => {
     navigate("/history")
   }
+
+  const disconnect = () => {
+    fetch("https://air-quality.azurewebsites.net/set-up/disconnection/", {
+      method: "POST",
+    }).then((response) => {
+      console.log("Disconnected")
+    })
+  }
+
   const navigateConnection = () => {
+    if (socket) {
+      socket.disconnect()
+    }
+    localStorage.clear()
+    setRealtimeData(null)
+    disconnect()
     navigate("/")
   }
 
-  const [realtimeData, setRealtimeData] = useState({
-    light: null,
-    co2: null,
-    tvoc: null,
-    humd: null,
-    airp: null,
-    temp: null,
-    sunrise: null,
-    sunset: null,
+  const [realtimeData, setRealtimeData] = useState(() => {
+    const storedData = localStorage.getItem("realtimeData")
+    return storedData
+      ? JSON.parse(storedData)
+      : {
+          light: null,
+          co2: null,
+          tvoc: null,
+          humd: null,
+          airp: null,
+          temp: null,
+          sunrise: null,
+          sunset: null,
+        }
   })
   const [aqi, setAqi] = useState(null)
   const [quality, setQuality] = useState(null)
-  const [alertMessage, setAlertMessage] = useState("")
   const [co2Alert, setCo2Alert] = useState(false)
   const [tvocAlert, setTvocAlert] = useState(false)
   const co2Threshhold = 5000
@@ -55,31 +74,48 @@ export const Dashboard = ({ historyData }) => {
     setTvocAlert(false)
   }
 
-  useEffect(() => {
-    socket.on("message", (data) => {
-      const temperary = JSON.parse(data)
-      const { light, co2, tvoc, humd, airp, temp, sunrise, sunset } =
-        temperary.elements
-      const aqi = temperary.AQI
-      const quality = temperary.Quality
-      const temperaryAlert = JSON.stringify(temperary.alerts)
-      setRealtimeData({ light, co2, tvoc, humd, airp, temp, sunrise, sunset })
-      setAqi(aqi)
-      setQuality(quality)
+  function handleSocketMessage(data) {
+    const temperary = JSON.parse(data)
+    const { light, co2, tvoc, humd, airp, temp, sunrise, sunset } =
+      temperary.elements
+    const aqi = temperary.AQI
+    const quality = temperary.Quality
 
-      if (co2 > co2Threshhold) {
-        setCo2Alert(true)
-        setAlertMessage(temperaryAlert)
-      } else if (tvoc > tvocThreshhold) {
-        setTvocAlert(true)
-        setAlertMessage(temperaryAlert)
-      } else {
-        setCo2Alert(false)
-        setTvocAlert(false)
-      }
+    setRealtimeData({
+      light,
+      co2,
+      tvoc: Math.round(tvoc),
+      humd,
+      airp: Math.round(airp),
+      temp,
+      sunrise,
+      sunset,
     })
-    return () => {}
-  }, [])
+    setAqi(aqi)
+    setQuality(quality)
+
+    if (co2 > co2Threshhold) {
+      setCo2Alert(true)
+    } else if (tvoc > tvocThreshhold) {
+      setTvocAlert(true)
+    } else {
+      setCo2Alert(false)
+      setTvocAlert(false)
+    }
+  }
+
+  useEffect(() => {
+    socket.on("message", handleSocketMessage)
+
+    const handleBeforeUnload = () => {
+      localStorage.setItem("realtimeData", JSON.stringify(realtimeData))
+    }
+    window.addEventListener("beforeunload", handleBeforeUnload)
+    return () => {
+      socket.off("message", handleSocketMessage)
+      window.removeEventListener("beforeunload", handleBeforeUnload)
+    }
+  }, [realtimeData])
 
   const [tempData, setTempData] = useState([])
   const fetchTempData = () => {
@@ -105,10 +141,10 @@ export const Dashboard = ({ historyData }) => {
     <div className="bg-[#F8F8FF] h-screen">
       {co2Alert && (
         <div className="fixed z-50 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-red-600 text-white font-bold p-4 rounded-lg shadow-lg flex items-center justify-between">
-            <p className="text-xl">{alertMessage}</p>
+          <div className="bg-red-600 text-white font-bold p-16 rounded-lg shadow-lg flex items-center justify-between">
+            <p className="text-6xl">CO2 Level is too high!</p>
             <button
-              className="text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 ml-4"
+              className="text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 ml-4 text-3xl"
               onClick={handleDismiss}
             >
               X
@@ -118,10 +154,10 @@ export const Dashboard = ({ historyData }) => {
       )}
       {tvocAlert && (
         <div className="fixed z-50 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-red-600 text-white font-bold p-4 rounded-lg shadow-lg flex items-center justify-between">
-            <p className="text-xl">{alertMessage}</p>
+          <div className="bg-red-600 text-white font-bold p-16 rounded-lg shadow-lg flex items-center justify-between">
+            <p className="text-6xl">T.V.O.C. Level is too high!</p>
             <button
-              className="text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 ml-4"
+              className="text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 ml-4 text-3xl"
               onClick={handleDismiss}
             >
               X
@@ -152,8 +188,8 @@ export const Dashboard = ({ historyData }) => {
 
             <CircularProgressbar
               className="max-w-[55%] mx-auto"
-              value={aqi}
-              text={aqi}
+              value={aqi || 100}
+              text={`${aqi}%` || "100%"}
               styles={buildStyles({
                 textColor: "#7284FF",
                 pathColor: "#7284FF",
@@ -162,7 +198,7 @@ export const Dashboard = ({ historyData }) => {
             />
 
             <div className="text-center text-light-purple text-3xl font-semibold">
-              {quality}
+              {quality || "EXCELLENT"}
             </div>
           </div>
 
@@ -180,8 +216,8 @@ export const Dashboard = ({ historyData }) => {
                 <div className="text-3xl text-light-purple font-medium pt-4 pb-4">
                   Carbon Dioxide
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">
-                  {realtimeData.co2}
+                <div className="inline-block text-5xl pr-2 pb-8">
+                  {realtimeData.co2 || 0}
                 </div>
                 <div className="inline-block text-3xl font-light">ppm</div>
               </div>
@@ -199,8 +235,8 @@ export const Dashboard = ({ historyData }) => {
                 <div className="text-3xl text-light-purple font-medium pt-4 pb-4">
                   T. V. O. C.
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">
-                  {realtimeData.tvoc}
+                <div className="inline-block text-5xl pr-2 pb-8">
+                  {realtimeData.tvoc || 0}
                 </div>
                 <div className="inline-block text-3xl font-light">ppb</div>
               </div>
@@ -220,8 +256,8 @@ export const Dashboard = ({ historyData }) => {
                 <div className="text-3xl text-light-purple font-medium pt-4 pb-4">
                   Air Pressure
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">
-                  {realtimeData.airp}
+                <div className="inline-block text-5xl pr-2 pb-8">
+                  {realtimeData.airp || 0}
                 </div>
                 <div className="inline-block text-3xl font-light">hPA</div>
               </div>
@@ -239,8 +275,8 @@ export const Dashboard = ({ historyData }) => {
                 <div className="text-3xl text-light-purple font-medium pt-4 pb-4">
                   Temperature
                 </div>
-                <div className="inline-block text-5xl pr-4 pb-8">
-                  {realtimeData.temp}
+                <div className="inline-block text-5xl pr-2 pb-8">
+                  {realtimeData.temp || 0}
                 </div>
                 <div className="inline-block text-3xl font-light">Cel</div>
               </div>
@@ -257,14 +293,14 @@ export const Dashboard = ({ historyData }) => {
                     <img className="w-[30%] " src="humidity.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Humidity</div>
-                      <div className="font-bold">{realtimeData.humd}%</div>
+                      <div className="font-bold">{realtimeData.humd || 0}%</div>
                     </div>
                   </div>
                   <div className="flex">
                     <img className="w-[30%] " src="lamp.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Light Level</div>
-                      <div className="font-bold">{realtimeData.light}</div>
+                      <div className="font-bold">{realtimeData.light || 0}</div>
                     </div>
                   </div>
                 </div>
@@ -276,14 +312,18 @@ export const Dashboard = ({ historyData }) => {
                     <img className="w-[30%] " src="sunrise.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Sunrise</div>
-                      <div className="font-bold">{realtimeData.sunrise}</div>
+                      <div className="font-bold">
+                        {realtimeData.sunrise || "00:00"}
+                      </div>
                     </div>
                   </div>
                   <div className="flex">
                     <img className="w-[30%] " src="sunset.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Sunset</div>
-                      <div className="font-bold">{realtimeData.sunset}</div>
+                      <div className="font-bold">
+                        {realtimeData.sunset || "00:00"}
+                      </div>
                     </div>
                   </div>
                 </div>
