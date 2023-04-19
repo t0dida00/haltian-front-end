@@ -42,6 +42,8 @@ export const Dashboard = ({ historyData }) => {
     sunrise: null,
     sunset: null,
   })
+  const [aqi, setAqi] = useState(null)
+  const [quality, setQuality] = useState(null)
   const [alertMessage, setAlertMessage] = useState("")
   const [co2Alert, setCo2Alert] = useState(false)
   const [tvocAlert, setTvocAlert] = useState(false)
@@ -58,8 +60,13 @@ export const Dashboard = ({ historyData }) => {
       const temperary = JSON.parse(data)
       const { light, co2, tvoc, humd, airp, temp, sunrise, sunset } =
         temperary.elements
+      const aqi = temperary.AQI
+      const quality = temperary.Quality
       const temperaryAlert = JSON.stringify(temperary.alerts)
       setRealtimeData({ light, co2, tvoc, humd, airp, temp, sunrise, sunset })
+      setAqi(aqi)
+      setQuality(quality)
+
       if (co2 > co2Threshhold) {
         setCo2Alert(true)
         setAlertMessage(temperaryAlert)
@@ -93,19 +100,6 @@ export const Dashboard = ({ historyData }) => {
     const formattedTime = `${date.toLocaleTimeString()}`
     return { Time: formattedTime, Temperature: item.temperature }
   })
-
-  const data = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    datasets: [
-      {
-        data: [80, 60, 85, 90, 95, 85],
-        backgroundColor: "#F8F8FF",
-        borderColor: "#7284FF",
-        tension: 0.25,
-        fill: true,
-      },
-    ],
-  }
 
   return (
     <div className="bg-[#F8F8FF] h-screen">
@@ -158,8 +152,8 @@ export const Dashboard = ({ historyData }) => {
 
             <CircularProgressbar
               className="max-w-[55%] mx-auto"
-              value="85"
-              text="85%"
+              value={aqi}
+              text={aqi}
               styles={buildStyles({
                 textColor: "#7284FF",
                 pathColor: "#7284FF",
@@ -168,7 +162,7 @@ export const Dashboard = ({ historyData }) => {
             />
 
             <div className="text-center text-light-purple text-3xl font-semibold">
-              EXCELLENT
+              {quality}
             </div>
           </div>
 
@@ -301,7 +295,7 @@ export const Dashboard = ({ historyData }) => {
           </div>
           <div className="bg-white w-[60%] rounded-xl p-8 h-[40%]">
             <div className="flex justify-between">
-              <div className="font-semibold">Today Temperature</div>
+              <div className="font-semibold">Previous Temperature</div>
               <button
                 className="w-[15%] p-2 bg-light-purple text-white rounded-full"
                 onClick={navigateHistory}
