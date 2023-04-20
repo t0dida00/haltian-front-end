@@ -23,6 +23,8 @@ import socket from "./Socket"
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
 
+const URL = "http://localhost:8080/"
+
 export const Dashboard = ({ historyData }) => {
   const navigate = useNavigate()
 
@@ -32,7 +34,7 @@ export const Dashboard = ({ historyData }) => {
   }
 
   const disconnect = () => {
-    fetch("https://air-quality.azurewebsites.net/set-up/disconnection/", {
+    fetch(`${URL}set-up/disconnection/`, {
       method: "POST",
     }).then((response) => {
       console.log("Disconnected")
@@ -58,15 +60,10 @@ export const Dashboard = ({ historyData }) => {
 
   const [aqi, setAqi] = useState(null)
   const [quality, setQuality] = useState(null)
-  const [co2Alert, setCo2Alert] = useState(false)
-  const [tvocAlert, setTvocAlert] = useState(false)
-
-  const co2Threshhold = 5000
-  const tvocThreshhold = 350
+  const [alerts, setAlerts] = useState([])
 
   function handleDismiss() {
-    setCo2Alert(false)
-    setTvocAlert(false)
+    setAlerts([])
   }
 
   useEffect(() => {
@@ -76,6 +73,7 @@ export const Dashboard = ({ historyData }) => {
         temporary.elements
       const aqi = temporary.AQI
       const quality = temporary.Quality
+      const alerts = temporary.alerts
 
       setRealtimeData({
         light,
@@ -87,19 +85,14 @@ export const Dashboard = ({ historyData }) => {
         sunrise,
         sunset,
       })
+
       setAqi(aqi)
       setQuality(quality)
-
-      if (co2 > co2Threshhold) {
-        setCo2Alert(true)
-      } else if (tvoc > tvocThreshhold) {
-        setTvocAlert(true)
-      } else {
-        setCo2Alert(false)
-        setTvocAlert(false)
-      }
+      setAlerts(alerts)
 
       localStorage.setItem("realtimeData", JSON.stringify(realtimeData))
+      localStorage.setItem("aqi", aqi)
+      localStorage.setItem("quality", quality)
     })
 
     return () => {}
@@ -107,12 +100,21 @@ export const Dashboard = ({ historyData }) => {
 
   const handleSaveData = () => {
     localStorage.setItem("realtimeData", JSON.stringify(realtimeData))
+    localStorage.setItem("aqi", aqi)
+    localStorage.setItem("quality", quality)
   }
 
   const getDataFromStorage = () => {
     const storedData = localStorage.getItem("realtimeData")
     if (storedData) {
       setRealtimeData(JSON.parse(storedData))
+    }
+
+    const storedAqi = localStorage.getItem("aqi")
+    const storedQuality = localStorage.getItem("quality")
+    if (storedAqi && storedQuality) {
+      setAqi(storedAqi)
+      setQuality(storedQuality)
     }
   }
 
@@ -123,7 +125,7 @@ export const Dashboard = ({ historyData }) => {
   const [tempData, setTempData] = useState([])
 
   const fetchTempData = () => {
-    fetch("https://air-quality.azurewebsites.net/history")
+    fetch(`${URL}history`)
       .then((response) => response.json())
       .then((data) => {
         setTempData(data.list)
@@ -145,10 +147,12 @@ export const Dashboard = ({ historyData }) => {
 
   return (
     <div className="bg-[#F8F8FF] h-screen">
-      {co2Alert && (
+      {alerts.length > 0 && (
         <div className="fixed z-50 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
           <div className="bg-red-600 text-white font-bold p-16 rounded-lg shadow-lg flex items-center justify-between">
-            <p className="text-6xl">CO2 Level is too high!</p>
+            {alerts.map((alert) => (
+              <p className="text-6xl">{alert}</p>
+            ))}
             <button
               className="text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 ml-4 text-3xl"
               onClick={handleDismiss}
@@ -158,19 +162,7 @@ export const Dashboard = ({ historyData }) => {
           </div>
         </div>
       )}
-      {tvocAlert && (
-        <div className="fixed z-50 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-red-600 text-white font-bold p-16 rounded-lg shadow-lg flex items-center justify-between">
-            <p className="text-6xl">T.V.O.C. Level is too high!</p>
-            <button
-              className="text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 ml-4 text-3xl"
-              onClick={handleDismiss}
-            >
-              X
-            </button>
-          </div>
-        </div>
-      )}
+
       <div className="py-12 px-32">
         <div className="flex justify-between">
           <div className="text-light-purple font-bold text-5xl font-sans mb-12">
@@ -195,7 +187,7 @@ export const Dashboard = ({ historyData }) => {
             <CircularProgressbar
               className="max-w-[55%] mx-auto"
               value={aqi || 100}
-              text={`${aqi}%`}
+              text={aqi || 100}
               styles={buildStyles({
                 textColor: "#7284FF",
                 pathColor: "#7284FF",

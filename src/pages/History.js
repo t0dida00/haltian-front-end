@@ -11,6 +11,8 @@ import {
   ResponsiveContainer,
 } from "recharts"
 
+const URL = "http://localhost:8080/"
+
 export const History = () => {
   const navigate = useNavigate()
   const navigateDashboard = () => {
@@ -20,7 +22,7 @@ export const History = () => {
   const [data, setData] = useState([])
 
   useEffect(() => {
-    fetch("https://air-quality.azurewebsites.net/history")
+    fetch(`${URL}history`)
       .then((response) => response.json())
       .then((data) => {
         setData(data.list)

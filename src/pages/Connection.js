@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
+const URL = "http://localhost:8080/"
+
 export const Connection = () => {
   const [clientId, setClientId] = useState("")
   const [protocol, setProtocol] = useState("mqtt")
@@ -28,13 +30,10 @@ export const Connection = () => {
     formData.append("cert", cert)
     formData.append("key", key)
 
-    const response = await fetch(
-      "https://air-quality.azurewebsites.net/set-up",
-      {
-        method: "POST",
-        body: formData,
-      }
-    )
+    const response = await fetch(`${URL}set-up`, {
+      method: "POST",
+      body: formData,
+    })
   }
 
   return (
