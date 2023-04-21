@@ -1,3 +1,4 @@
+
 # Real-time Air Quality Measurement Website
 
 This website provides real-time air quality data for room offices. Users can view the latest air quality measurements for different pollutants, as well as historical data and trends over time.
@@ -38,3 +39,4 @@ If you have any questions or feedback, please email us at
 
 - t0phtr00@students.oamk.fi
 - t0dida00@students.oamk.fi
+=
