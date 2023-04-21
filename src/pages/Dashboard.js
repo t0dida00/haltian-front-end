@@ -23,8 +23,8 @@ import socket from "./Socket"
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement)
 
-const URL = "http://localhost:8080/"
-
+const development_URL = "http://localhost:8080/"
+const production_URL = "https://air-quality.azurewebsites.net/"
 export const Dashboard = ({ historyData }) => {
   const navigate = useNavigate()
 
@@ -34,7 +34,7 @@ export const Dashboard = ({ historyData }) => {
   }
 
   const disconnect = () => {
-    fetch(`${URL}set-up/disconnection/`, {
+    fetch(`${production_URL}set-up/disconnection/`, {
       method: "POST",
     }).then((response) => {
       console.log("Disconnected")
@@ -58,16 +58,21 @@ export const Dashboard = ({ historyData }) => {
     sunset: null,
   })
 
-  const [aqi, setAqi] = useState(null)
+  const [aqi, setAqi] = useState("")
   const [quality, setQuality] = useState(null)
   const [alerts, setAlerts] = useState([])
-
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [hiddenElement, setHiddenElement] = useState({})
+  //const [index,setIndex]=useState["#FAD200","#FA1D00","#FA1D00"]
   function handleDismiss() {
-    setAlerts([])
+    //setAlerts([])
+    setHiddenElement({ display: "none" })
   }
 
   useEffect(() => {
     socket.on("message", (data) => {
+
+      setCurrentTime(new Date())
       const temporary = JSON.parse(data)
       const { light, co2, tvoc, humd, airp, temp, sunrise, sunset } =
         temporary.elements
@@ -85,17 +90,17 @@ export const Dashboard = ({ historyData }) => {
         sunrise,
         sunset,
       })
-
+      setHiddenElement({})
       setAqi(aqi)
       setQuality(quality)
       setAlerts(alerts)
 
-      localStorage.setItem("realtimeData", JSON.stringify(realtimeData))
-      localStorage.setItem("aqi", aqi)
-      localStorage.setItem("quality", quality)
+      // localStorage.setItem("realtimeData", JSON.stringify(realtimeData))
+      // localStorage.setItem("aqi", aqi)
+      // localStorage.setItem("quality", quality)
     })
 
-    return () => {}
+    // return () => {}
   }, [])
 
   const handleSaveData = () => {
@@ -125,7 +130,7 @@ export const Dashboard = ({ historyData }) => {
   const [tempData, setTempData] = useState([])
 
   const fetchTempData = () => {
-    fetch(`${URL}history`)
+    fetch(`${production_URL}history`)
       .then((response) => response.json())
       .then((data) => {
         setTempData(data.list)
@@ -145,16 +150,32 @@ export const Dashboard = ({ historyData }) => {
     return { Time: formattedTime, Temperature: item.temperature }
   })
 
+  const co2Alert = alerts.find(alert => (alert.element.includes("co2")))
+  const co2Style = co2Alert ? { background: co2Alert.index, color: "white" } : null;
+  const tvocAlert = alerts.find(alert => (alert.element.includes("tvoc")))
+  const tvocStyle = tvocAlert ? { background: tvocAlert.index, color: "white" } : null;
+  const tempAlert = alerts.find(alert => (alert.element.includes("temperature")))
+  const tempStyle = tempAlert ? { background: tempAlert.index, color: "white" } : null;
+  const humdAlert = alerts.find(alert => (alert.element.includes("humidity")))
+  const humdStyle = humdAlert ? { background: humdAlert.index } : null;
+
+  const qualityStyle = quality == "Excellent" ? null :  quality == "Good" ? {color:"green"}:quality == "Moderate" ?  {color:"orange"} : null
+
   return (
     <div className="bg-[#F8F8FF] h-screen">
       {alerts.length > 0 && (
-        <div className="fixed z-50 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-red-600 text-white font-bold p-16 rounded-lg shadow-lg flex items-center justify-between">
-            {alerts.map((alert) => (
-              <p className="text-6xl">{alert}</p>
-            ))}
+        <div className="fixed z-50 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center" style={hiddenElement}>
+          <div className="bg-red-600 flex">
+
+            <div className=" text-white font-bold p-16  flex-col items-center justify-between">
+              {alerts.map((alert, index) => (
+                //<p className="text-6xl">{alert}</p>
+                <p className="my-2" key={index}>{index + 1}. {alert.alert}</p>
+              ))}
+
+            </div>
             <button
-              className="text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 ml-4 text-3xl"
+              className="text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 mr-4"
               onClick={handleDismiss}
             >
               X
@@ -186,8 +207,8 @@ export const Dashboard = ({ historyData }) => {
 
             <CircularProgressbar
               className="max-w-[55%] mx-auto"
-              value={aqi || 100}
-              text={aqi || 100}
+              value={typeof aqi === 'number' ? 100 - aqi : 50}
+              text={aqi || "Analyzing"}
               styles={buildStyles({
                 textColor: "#7284FF",
                 pathColor: "#7284FF",
@@ -195,13 +216,14 @@ export const Dashboard = ({ historyData }) => {
               })}
             />
 
-            <div className="text-center text-light-purple text-3xl font-semibold">
-              {quality || "EXCELLENT"}
+            <div className="text-center text-light-purple text-3xl font-semibold" style={qualityStyle}>
+              {quality || "Analyzing"}
             </div>
           </div>
 
           <div className="w-[28%]">
-            <div className="bg-white rounded-xl flex py-4 mb-8">
+            <div className="bg-white rounded-xl flex py-4 mb-8" style={co2Style}>
+
               <div className="flex align-middle justify-center w-[50%]">
                 <img
                   className="w-[55%] align-middle m-auto"
@@ -211,17 +233,17 @@ export const Dashboard = ({ historyData }) => {
               </div>
 
               <div>
-                <div className="text-3xl text-light-purple font-medium pt-4 pb-4">
+                <div className="text-3xl text-light-purple font-medium pt-4 pb-4" style={co2Style}>
                   Carbon Dioxide
                 </div>
-                <div className="inline-block text-5xl pr-2 pb-8">
+                <div className="inline-block text-5xl pr-2 pb-8 ">
                   {realtimeData.co2 || 0}
                 </div>
                 <div className="inline-block text-3xl font-light">ppm</div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl flex py-4">
+            <div className="bg-white rounded-xl flex py-4" style={tvocStyle}>
               <div className="flex align-middle justify-center w-[50%]">
                 <img
                   className="w-[55%] align-middle m-auto"
@@ -230,7 +252,7 @@ export const Dashboard = ({ historyData }) => {
                 />
               </div>
               <div>
-                <div className="text-3xl text-light-purple font-medium pt-4 pb-4">
+                <div className="text-3xl text-light-purple font-medium pt-4 pb-4" style={tvocStyle}>
                   T. V. O. C.
                 </div>
                 <div className="inline-block text-5xl pr-2 pb-8">
@@ -242,6 +264,7 @@ export const Dashboard = ({ historyData }) => {
           </div>
 
           <div className="w-[28%]">
+
             <div className="bg-white rounded-xl flex py-4 mb-8">
               <div className="flex align-middle justify-center w-[50%]">
                 <img
@@ -261,7 +284,7 @@ export const Dashboard = ({ historyData }) => {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl flex py-4">
+            <div className="bg-white rounded-xl flex py-4" style={tempStyle}>
               <div className="flex align-middle justify-center w-[50%]">
                 <img
                   className="max-w-[55%] align-middle m-auto"
@@ -270,7 +293,7 @@ export const Dashboard = ({ historyData }) => {
                 />
               </div>
               <div>
-                <div className="text-3xl text-light-purple font-medium pt-4 pb-4">
+                <div className="text-3xl text-light-purple font-medium pt-4 pb-4" style={tempStyle}>
                   Temperature
                 </div>
                 <div className="inline-block text-5xl pr-2 pb-8">
@@ -287,7 +310,7 @@ export const Dashboard = ({ historyData }) => {
             <div className="flex bg-white rounded-xl justify-around mb-8">
               <div className="flex w-[40%] py-8">
                 <div className="border-r-2 border-r-black">
-                  <div className="flex pb-4">
+                  <div className="flex pb-4" style={humdStyle}>
                     <img className="w-[30%] " src="humidity.png" alt="img" />
                     <div className="align-center m-auto">
                       <div>Humidity</div>
@@ -327,8 +350,17 @@ export const Dashboard = ({ historyData }) => {
                 </div>
               </div>
             </div>
-            <div className="bg-[#C3CAFF] rounded-xl p-8 text-3xl text-white font-semibold">
-              Suggestions
+            <div className="bg-[#C3CAFF] rounded-xl p-8 text-3xl text-black font-semibold ">
+              {/* Suggestion */}
+              Last updated: {currentTime.toLocaleString('en-US', {
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                hour12: false,
+                // weekday: 'short',
+                // month: 'short',
+                // day: 'numeric',
+              })}
             </div>
           </div>
           <div className="bg-white w-[60%] rounded-xl p-8 h-[40%]">
