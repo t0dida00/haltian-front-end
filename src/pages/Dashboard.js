@@ -57,7 +57,15 @@ export const Dashboard = ({ historyData }) => {
     sunrise: null,
     sunset: null,
   })
-
+  const [outdoorData, setOutdoorData] = useState({
+    aqi_outdoor: null,
+    app_temp: null,
+    temperature:null,
+    humidity: null,
+    wind_spd: null,
+    ob_time: null,
+    description: null,
+  })
   const [aqi, setAqi] = useState("")
   const [quality, setQuality] = useState(null)
   const [alerts, setAlerts] = useState([])
@@ -76,6 +84,8 @@ export const Dashboard = ({ historyData }) => {
       const temporary = JSON.parse(data)
       const { light, co2, tvoc, humd, airp, temp, sunrise, sunset } =
         temporary.elements
+      const { aqi_outdoor, app_temp,temperature, humidity,wind_spd,ob_time,description } =
+        temporary.outdoor
       const aqi = temporary.AQI
       const quality = temporary.Quality
       const alerts = temporary.alerts
@@ -89,6 +99,15 @@ export const Dashboard = ({ historyData }) => {
         temp,
         sunrise,
         sunset,
+      })
+      setOutdoorData({
+        aqi_outdoor,
+        app_temp,
+        temperature,
+        humidity,
+        wind_spd,
+        ob_time,
+        description
       })
       setHiddenElement({})
       setAqi(aqi)
@@ -159,7 +178,7 @@ export const Dashboard = ({ historyData }) => {
   const humdAlert = alerts.find(alert => (alert.element.includes("humidity")))
   const humdStyle = humdAlert ? { background: humdAlert.index } : null;
 
-  const qualityStyle = quality == "Excellent" ? null :  quality == "Good" ? {color:"green"}:quality == "Moderate" ?  {color:"orange"} : null
+  const qualityStyle = quality == "Excellent" ? null : quality == "Good" ? { color: "green" } : quality == "Moderate" ? { color: "orange" } : null
 
   return (
     <div className="bg-[#F8F8FF] h-screen">
@@ -184,25 +203,31 @@ export const Dashboard = ({ historyData }) => {
         </div>
       )}
 
-      <div className="py-12 px-32">
-        <div className="flex justify-between">
-          <div className="text-light-purple font-bold text-5xl font-sans mb-12">
-            HALTIAN DEMO
-          </div>
-          <div className="w-[10%]">
+      <div className="pt-4 px-32">
+          <div className="text-light-purple font-bold text-5xl font-sans mb-12 text-center">
+            INDOOR AIR QUALITY MORNITORING
+
+          {/* <div className="w-[20%] flex justify-between">
             <button
-              className="rounded-xl bg-light-purple text-white h-[50%] w-full"
+              className="rounded-xl bg-light-purple text-white h-[50%] w-[40%]"
+              onClick={navigateHistory}
+            >
+              History
+            </button>
+            <button
+              className="rounded-xl bg-light-purple text-white h-[50%] w-[40%]"
               onClick={navigateConnection}
             >
               Disconnect
             </button>
-          </div>
+
+          </div> */}
         </div>
 
         <div className="flex justify-between mb-16">
-          <div className="bg-white rounded-xl flex flex-col w-[25%] justify-around">
+          <div className="bg-white rounded-xl flex flex-col w-[30%] justify-around">
             <div className="text-center text-light-purple text-3xl">
-              AIR QUALITY
+              AIR QUALITY INDEX
             </div>
 
             <CircularProgressbar
@@ -221,7 +246,7 @@ export const Dashboard = ({ historyData }) => {
             </div>
           </div>
 
-          <div className="w-[28%]">
+          <div className="w-[30%]">
             <div className="bg-white rounded-xl flex py-4 mb-8" style={co2Style}>
 
               <div className="flex align-middle justify-center w-[50%]">
@@ -260,10 +285,12 @@ export const Dashboard = ({ historyData }) => {
                 </div>
                 <div className="inline-block text-3xl font-light">ppb</div>
               </div>
+            
             </div>
+          
           </div>
 
-          <div className="w-[28%]">
+          <div className="w-[30%]">
 
             <div className="bg-white rounded-xl flex py-4 mb-8">
               <div className="flex align-middle justify-center w-[50%]">
@@ -306,9 +333,9 @@ export const Dashboard = ({ historyData }) => {
         </div>
 
         <div className="flex justify-between">
-          <div className="w-[35%] rounded-xl">
+          <div className="w-[35%] rounded-xl flex flex-col justify-between">
             <div className="flex bg-white rounded-xl justify-around mb-8">
-              <div className="flex w-[40%] py-8">
+              <div className="flex p-8">
                 <div className="border-r-2 border-r-black">
                   <div className="flex pb-4" style={humdStyle}>
                     <img className="w-[30%] " src="humidity.png" alt="img" />
@@ -327,7 +354,7 @@ export const Dashboard = ({ historyData }) => {
                 </div>
               </div>
 
-              <div className="flex w-[40%] py-8">
+              <div className="flex  p-8">
                 <div>
                   <div className="flex pb-4">
                     <img className="w-[30%] " src="sunrise.png" alt="img" />
@@ -363,18 +390,76 @@ export const Dashboard = ({ historyData }) => {
               })}
             </div>
           </div>
-          <div className="bg-white w-[60%] rounded-xl p-8 h-[40%]">
-            <div className="flex justify-between">
-              <div className="font-semibold">Previous Temperature</div>
-              <button
-                className="w-[15%] p-2 bg-light-purple text-white rounded-full"
-                onClick={navigateHistory}
-              >
-                History
-              </button>
+          <div className="bg-white w-[60%] rounded-xl p-8 ">
+            <div className="text-center text-5xl	">
+              <div className="font-semibold">OUTDOOR WEATHER</div>
+                
             </div>
-
-            <ResponsiveContainer width="100%" height={350}>
+            <div className="flex bg-white rounded-xl justify-around">
+              <div className="flex w-[40%] p-8 m-auto">
+                <div className="border-r-2 border-r-black">
+                  <div className="flex pb-4" style={humdStyle}>
+                    <img className="w-[30%] " src="humidity.png" alt="img" />
+                    <div className="align-center  ml-7 my-auto">
+                      <div>Air Quality Index</div>
+                      <div className="font-bold">{outdoorData.aqi_outdoor || "Updating"}</div>
+                    </div>
+                  </div>
+                  <div className="flex">
+                    {/* <img className="w-[30%] " src="lamp.png" alt="img" />
+                    <div className="align-center m-auto">
+                      <div>Light Level</div>
+                      <div className="font-bold">{realtimeData.light || 0}</div>
+                    </div> */}
+                    <div className="align-center m-auto ">
+                        <div className="font-bold">{outdoorData.description || ""}</div>
+                    </div> 
+                  </div>
+                </div>
+              </div>
+              <div className="flex w-[40%] p-8">
+                <div className="border-r-2 border-r-black">
+                  <div className="flex pb-4" style={humdStyle}>
+                    <img className="w-[30%] " src="thermometer.png" alt="img" />
+                    <div className="align-center  ml-7 my-auto">
+                      <div>Temperature</div>
+                      <div className="font-bold">{outdoorData.temperature || "Updating"} Cel</div>
+                    </div>
+                  </div>
+                  <div className="flex">
+                    <img className="w-[30%] " src="lamp.png" alt="img" />
+                    <div className="align-center  ml-7 my-auto">
+                      <div>Feel like</div>
+                      <div className="font-bold">{outdoorData.app_temp || "Updating"} Cel</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex w-[40%] p-8">
+                <div>
+                  <div className="flex pb-4">
+                    <img className="w-[30%] " src="humidity.png" alt="img" />
+                    <div className="align-center  ml-7 my-auto">
+                      <div>Humidity</div>
+                      <div className="font-bold">
+                        {outdoorData.humidity || "Updating"}%
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex">
+                    <img className="w-[30%] " src="sunset.png" alt="img" />
+                    <div className="align-center ml-7 my-auto">
+                      <div>Wind speed</div>
+                      <div className="font-bold">
+                        {outdoorData.wind_spd || "Updating"}  m/s
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            {/* <ResponsiveContainer width="100%" height={350}>
               <LineChart data={temperatureData}>
                 <XAxis dataKey="Time" />
                 <YAxis />
@@ -383,7 +468,9 @@ export const Dashboard = ({ historyData }) => {
                 <Legend />
                 <Line type="monotone" dataKey="Temperature" stroke="#8884d8" />
               </LineChart>
-            </ResponsiveContainer>
+            </ResponsiveContainer> */}
+
+            <div className="text-center">Last observation time: {outdoorData.ob_time || "Updating"}</div>
           </div>
         </div>
       </div>
