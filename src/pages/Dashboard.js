@@ -454,7 +454,7 @@ export const Dashboard = ({ historyData }) => {
               <div className="flex w-[40%] p-8 m-auto">
                 <div className="border-r-2 border-r-black">
                   <div className="flex pb-4" style={humdStyle}>
-                  <svg class="h-16 w-16 text-indigo-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="4 19 8 13 12 15 16 10 20 14 20 19 4 19" />  <polyline points="4 12 7 8 11 10 16 4 20 8" /></svg>
+                  <svg className="h-16 w-16 text-indigo-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="4 19 8 13 12 15 16 10 20 14 20 19 4 19" />  <polyline points="4 12 7 8 11 10 16 4 20 8" /></svg>
                     <div className="align-center  ml-7 my-auto">
                       <div>Air Quality Index</div>
                       <div className="font-bold">{outdoorData.aqi_outdoor || "Updating"}</div>
@@ -483,7 +483,7 @@ export const Dashboard = ({ historyData }) => {
                   </div>
                   <div className="flex">
                   <div >
-                  <svg class="h-16 w-16 text-indigo-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="7" r="4" />  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
+                  <svg className="h-16 w-16 text-indigo-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="7" r="4" />  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
                     </div>
 
                     <div className="align-center  ml-7 my-auto">
@@ -505,7 +505,7 @@ export const Dashboard = ({ historyData }) => {
                     </div>
                   </div>
                   <div className="flex">
-                  <svg class="h-16 w-16 text-indigo-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2" /></svg>
+                  <svg className="h-16 w-16 text-indigo-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  strokeLinecap="round"  stroke-linejoin="round">  <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2" /></svg>
                     <div className="align-center ml-7 my-auto">
                       <div>Wind speed</div>
                       <div className="font-bold">
