@@ -31,7 +31,7 @@ export const Connection = () => {
     formData.append("cert", cert)
     formData.append("key", key)
 
-    const response = await fetch(`${development_URL}set-up`, {
+    const response = await fetch(`${production_URL}set-up`, {
       method: "POST",
       body: formData,
     })
