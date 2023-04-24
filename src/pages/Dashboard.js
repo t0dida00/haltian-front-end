@@ -241,7 +241,7 @@ export const Dashboard = ({ historyData }) => {
         </div>
       )}
 
-      <div className="pt-4 px-32">
+      <div className="pt-4 px-32 h-screen">
         <div className="text-light-purple font-bold text-5xl font-sans mb-12 text-center">
           INDOOR AIR QUALITY MORNITORING
 
@@ -262,7 +262,7 @@ export const Dashboard = ({ historyData }) => {
           </div> */}
         </div>
 
-        <div className="flex justify-between mb-16">
+        <div className="flex justify-between mb-16 h-[50%]">
           <div className="bg-white rounded-xl flex flex-col w-[30%] justify-around">
             <div className="text-center text-light-purple text-3xl">
               AIR QUALITY INDEX
@@ -381,8 +381,8 @@ export const Dashboard = ({ historyData }) => {
           </div>
         </div>
 
-        <div className="flex justify-between">
-          <div className="w-[35%] rounded-xl flex flex-col justify-between">
+        <div className="flex justify-between h-[40%]">
+          <div className="w-[35%] rounded-xl flex flex-col justify-between ">
             <div className="flex bg-white rounded-xl justify-around mb-8">
               <div className="flex p-8">
                 <div className="border-r-2 border-r-black">
@@ -450,10 +450,10 @@ export const Dashboard = ({ historyData }) => {
               <div className="font-semibold">OUTDOOR WEATHER</div>
 
             </div>
-            <div className="flex bg-white rounded-xl justify-around">
+            <div className="flex bg-white rounded-xl justify-around h-[80%] items-center">
               <div className="flex w-[40%] p-8 m-auto">
                 <div className="border-r-2 border-r-black">
-                  <div className="flex pb-4" style={humdStyle}>
+                  <div className="flex pb-4" >
                   <svg className="h-16 w-16 text-indigo-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="4 19 8 13 12 15 16 10 20 14 20 19 4 19" />  <polyline points="4 12 7 8 11 10 16 4 20 8" /></svg>
                     <div className="align-center  ml-7 my-auto">
                       <div>Air Quality Index</div>
@@ -474,7 +474,7 @@ export const Dashboard = ({ historyData }) => {
               </div>
               <div className="flex w-[40%] p-8">
                 <div className="border-r-2 border-r-black">
-                  <div className="flex pb-4" style={humdStyle}>
+                  <div className="flex pb-4" >
                     <img className="w-[30%] " src="thermometer.png" alt="img" />
                     <div className="align-center  ml-7 my-auto">
                       <div>Temperature</div>
@@ -486,7 +486,7 @@ export const Dashboard = ({ historyData }) => {
                   <svg className="h-16 w-16 text-indigo-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="7" r="4" />  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
                     </div>
 
-                    <div className="align-center  ml-7 my-auto">
+                    <div className="align-center ml-7 my-auto">
                       <div>Feels like</div>
                       <div className="font-bold">{outdoorData.app_temp || "Updating"} Cel</div>
                     </div>
