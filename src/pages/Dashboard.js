@@ -381,7 +381,7 @@ export const Dashboard = ({ historyData }) => {
           </div>
         </div>
 
-        <div className="flex justify-between h-[40%]">
+        <div className="flex justify-between">
           <div className="w-[35%] rounded-xl flex flex-col justify-between ">
             <div className="flex bg-white rounded-xl justify-around mb-8">
               <div className="flex p-8">
