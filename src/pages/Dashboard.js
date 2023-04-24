@@ -129,26 +129,49 @@ export const Dashboard = ({ historyData }) => {
       setQuality(quality)
       setAlerts(alerts)
 
-      // localStorage.setItem("realtimeData", JSON.stringify(realtimeData))
-      // localStorage.setItem("aqi", aqi)
-      // localStorage.setItem("quality", quality)
+      localStorage.setItem("indoorData", JSON.stringify({
+        light,
+        co2,
+        tvoc,
+        humd,
+        airp: Math.round(airp),
+        temp,
+        sunrise,
+        sunset,
+      }))
+      localStorage.setItem("aqi", aqi)
+      localStorage.setItem("quality", quality)
+      localStorage.setItem("outdoorData", JSON.stringify({
+        aqi_outdoor,
+        app_temp,
+        temperature,
+        humidity,
+        wind_spd,
+        ob_time,
+        description
+      }))
+     
     })
 
     // return () => {}
   }, [])
 
   const handleSaveData = () => {
+
     localStorage.setItem("realtimeData", JSON.stringify(realtimeData))
     localStorage.setItem("aqi", aqi)
     localStorage.setItem("quality", quality)
   }
 
   const getDataFromStorage = () => {
-    const storedData = localStorage.getItem("realtimeData")
+    let storedData = localStorage.getItem("indoorData")
     if (storedData) {
       setRealtimeData(JSON.parse(storedData))
     }
-
+    storedData = localStorage.getItem("outdoorData")
+    if (storedData) {
+      setOutdoorData(JSON.parse(storedData))
+    }
     const storedAqi = localStorage.getItem("aqi")
     const storedQuality = localStorage.getItem("quality")
     if (storedAqi && storedQuality) {
@@ -455,7 +478,7 @@ export const Dashboard = ({ historyData }) => {
                     <img className="w-[30%] " src="thermometer.png" alt="img" />
                     <div className="align-center  ml-7 my-auto">
                       <div>Temperature</div>
-                      <div className="font-bold">{outdoorData.temperature || "Updating"} Cel</div>
+                      <div className="font-bold">{outdoorData.temperature} Cel</div>
                     </div>
                   </div>
                   <div className="flex">
