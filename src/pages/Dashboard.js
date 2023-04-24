@@ -34,7 +34,7 @@ export const Dashboard = ({ historyData }) => {
   }
 
   const disconnect = () => {
-    fetch(`${production_URL}set-up/disconnection/`, {
+    fetch(`${development_URL}set-up/disconnection/`, {
       method: "POST",
     }).then((response) => {
       console.log("Disconnected")
@@ -60,7 +60,7 @@ export const Dashboard = ({ historyData }) => {
   const [outdoorData, setOutdoorData] = useState({
     aqi_outdoor: null,
     app_temp: null,
-    temperature:null,
+    temperature: null,
     humidity: null,
     wind_spd: null,
     ob_time: null,
@@ -71,6 +71,21 @@ export const Dashboard = ({ historyData }) => {
   const [alerts, setAlerts] = useState([])
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hiddenElement, setHiddenElement] = useState({})
+  const [time, setTime] = useState(new Date());
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+  const year = time.getFullYear();
+  const month = time.getMonth() + 1;
+  const day = time.getDate();
+  const hours = time.getHours();
+  const minutes = time.getMinutes();
+  const seconds = time.getSeconds();
+
   //const [index,setIndex]=useState["#FAD200","#FA1D00","#FA1D00"]
   function handleDismiss() {
     //setAlerts([])
@@ -84,7 +99,7 @@ export const Dashboard = ({ historyData }) => {
       const temporary = JSON.parse(data)
       const { light, co2, tvoc, humd, airp, temp, sunrise, sunset } =
         temporary.elements
-      const { aqi_outdoor, app_temp,temperature, humidity,wind_spd,ob_time,description } =
+      const { aqi_outdoor, app_temp, temperature, humidity, wind_spd, ob_time, description } =
         temporary.outdoor
       const aqi = temporary.AQI
       const quality = temporary.Quality
@@ -149,7 +164,7 @@ export const Dashboard = ({ historyData }) => {
   const [tempData, setTempData] = useState([])
 
   const fetchTempData = () => {
-    fetch(`${production_URL}history`)
+    fetch(`${development_URL}history`)
       .then((response) => response.json())
       .then((data) => {
         setTempData(data.list)
@@ -204,8 +219,8 @@ export const Dashboard = ({ historyData }) => {
       )}
 
       <div className="pt-4 px-32">
-          <div className="text-light-purple font-bold text-5xl font-sans mb-12 text-center">
-            INDOOR AIR QUALITY MORNITORING
+        <div className="text-light-purple font-bold text-5xl font-sans mb-12 text-center">
+          INDOOR AIR QUALITY MORNITORING
 
           {/* <div className="w-[20%] flex justify-between">
             <button
@@ -243,6 +258,17 @@ export const Dashboard = ({ historyData }) => {
 
             <div className="text-center text-light-purple text-3xl font-semibold" style={qualityStyle}>
               {quality || "Analyzing"}
+            </div>
+            <div className="text-blue-600/50 text-1xl font-semibold" >
+              Last updated: {currentTime.toLocaleString('en-US', {
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                hour12: false,
+                // weekday: 'short',
+                // month: 'short',
+                // day: 'numeric',
+              })}
             </div>
           </div>
 
@@ -285,9 +311,9 @@ export const Dashboard = ({ historyData }) => {
                 </div>
                 <div className="inline-block text-3xl font-light">ppb</div>
               </div>
-            
+
             </div>
-          
+
           </div>
 
           <div className="w-[30%]">
@@ -377,9 +403,9 @@ export const Dashboard = ({ historyData }) => {
                 </div>
               </div>
             </div>
-            <div className="bg-[#C3CAFF] rounded-xl p-8 text-3xl text-black font-semibold ">
+            {/* <div className="bg-[#C3CAFF] rounded-xl p-8 text-3xl text-black font-semibold "> */}
               {/* Suggestion */}
-              Last updated: {currentTime.toLocaleString('en-US', {
+              {/* Last updated: {currentTime.toLocaleString('en-US', {
                 hour: 'numeric',
                 minute: 'numeric',
                 second: 'numeric',
@@ -387,13 +413,19 @@ export const Dashboard = ({ historyData }) => {
                 // weekday: 'short',
                 // month: 'short',
                 // day: 'numeric',
-              })}
-            </div>
+              })} */}
+              <div style={{ display: "flex", justifyContent: "center",border: "1px solid black",  borderRadius: "5px" }} className="p-8 text-3xl text-black font-semibold bg-[#C3CAFF] rounded-xl" >
+
+                <div style={{  height: "auto", textAlign: "center", fontWeight: "bold", fontSize: "2.5rem" }} className="bg-[#C3CAFF] rounded-xl ">
+                  {`${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds} ${day < 10 ? "0" : ""}${day}/${month < 10 ? "0" : ""}${month}/${year} `}
+                </div>
+              </div>
+            {/* </div> */}
           </div>
           <div className="bg-white w-[60%] rounded-xl p-8 ">
             <div className="text-center text-5xl	">
               <div className="font-semibold">OUTDOOR WEATHER</div>
-                
+
             </div>
             <div className="flex bg-white rounded-xl justify-around">
               <div className="flex w-[40%] p-8 m-auto">
@@ -412,8 +444,8 @@ export const Dashboard = ({ historyData }) => {
                       <div className="font-bold">{realtimeData.light || 0}</div>
                     </div> */}
                     <div className="align-center m-auto ">
-                        <div className="font-bold">{outdoorData.description || ""}</div>
-                    </div> 
+                      <div className="font-bold">{outdoorData.description || ""}</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -457,7 +489,7 @@ export const Dashboard = ({ historyData }) => {
                   </div>
                 </div>
               </div>
-              
+
             </div>
             {/* <ResponsiveContainer width="100%" height={350}>
               <LineChart data={temperatureData}>
