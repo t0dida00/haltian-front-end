@@ -264,7 +264,7 @@ export const Dashboard = ({ historyData }) => {
 
         <div className="flex justify-between mb-16">
           <div className="bg-white rounded-xl flex flex-col w-[30%] justify-around">
-            <div className="text-center text-light-purple text-3xl">
+            <div className="text-center text-light-purple text-1xl lg:text-2xl xl:text-3xl">
               AIR QUALITY INDEX
             </div>
 
@@ -279,7 +279,7 @@ export const Dashboard = ({ historyData }) => {
               })}
             />
 
-            <div className="text-center text-light-purple text-3xl font-semibold" style={qualityStyle}>
+            <div className="text-center text-light-purple text-1xl lg:text-2xl xl:text-3xl font-semibold" style={qualityStyle}>
               {quality || "Analyzing"}
             </div>
             <div className="text-blue-600/50 text-1xl font-semibold" >
@@ -306,14 +306,14 @@ export const Dashboard = ({ historyData }) => {
                 />
               </div>
 
-              <div>
-                <div className="text-3xl text-light-purple font-medium pt-4 pb-4" style={co2Style}>
+              <div className="flex flex-col justify-around">
+                <div className="text-light-purple font-medium text-1xl lg:text-2xl xl:text-3xl pt-4 pb-4" style={co2Style}>
                   Carbon Dioxide
                 </div>
-                <div className="inline-block text-5xl pr-2 pb-8 ">
-                  {realtimeData.co2 || 0}
+                <div className="inline-block text-1xl lg:text-3xl xl:text-4xl pr-2 pb-8 ">
+                  {realtimeData.co2 || 0} ppm
                 </div>
-                <div className="inline-block text-3xl font-light">ppm</div>
+                {/* <div className="inline-block text-1xl lg:text-2xl xl:text-3xl font-light">ppm</div> */}
               </div>
             </div>
 
@@ -325,14 +325,14 @@ export const Dashboard = ({ historyData }) => {
                   alt="img"
                 />
               </div>
-              <div>
-                <div className="text-3xl text-light-purple font-medium pt-4 pb-4" style={tvocStyle}>
+              <div className="flex flex-col justify-around">
+                <div className="text-1xl lg:text-2xl xl:text-3xl text-light-purple font-medium pt-4 pb-4" style={tvocStyle}>
                   T. V. O. C.
                 </div>
-                <div className="inline-block text-5xl pr-2 pb-8">
-                  {realtimeData.tvoc || 0}
+                <div className="inline-block text-1xl lg:text-3xl xl:text-4xl pr-2 pb-8">
+                  {realtimeData.tvoc || 0} ppb
                 </div>
-                <div className="inline-block text-3xl font-light">ppb</div>
+                {/* <div className="inline-block text-1xl lg:text-2xl xl:text-3xl font-light">ppb</div> */}
               </div>
 
             </div>
@@ -349,14 +349,14 @@ export const Dashboard = ({ historyData }) => {
                   alt="img"
                 />
               </div>
-              <div>
-                <div className="text-3xl text-light-purple font-medium pt-4 pb-4">
+              <div className="flex flex-col justify-around">
+                <div className=" text-1xl lg:text-2xl xl:text-3xl text-light-purple font-medium pt-4 pb-4">
                   Air Pressure
                 </div>
-                <div className="inline-block text-5xl pr-2 pb-8">
-                  {realtimeData.airp || 0}
+                <div className="inline-block text-1xl lg:text-3xl xl:text-4xl pr-2 pb-8">
+                  {realtimeData.airp || 0} hPa
                 </div>
-                <div className="inline-block text-3xl font-light">hPA</div>
+                {/* <div className="inline-block text-1xl lg:text-2xl xl:text-3xl font-light">hPA</div> */}
               </div>
             </div>
 
@@ -368,14 +368,14 @@ export const Dashboard = ({ historyData }) => {
                   alt="img"
                 />
               </div>
-              <div>
-                <div className="text-3xl text-light-purple font-medium pt-4 pb-4" style={tempStyle}>
+              <div className="flex flex-col justify-around">
+                <div className="text-1xl lg:text-2xl xl:text-3xl  text-light-purple font-medium pt-4 pb-4" style={tempStyle}>
                   Temperature
                 </div>
-                <div className="inline-block text-5xl pr-2 pb-8">
-                  {realtimeData.temp || 0}
+                <div className="inline-block  text-1xl lg:text-3xl xl:text-4xl pr-2 pb-8">
+                  {realtimeData.temp || 0} Cel
                 </div>
-                <div className="inline-block text-3xl font-light">Cel</div>
+                {/* <div className="inline-block text-1xl lg:text-2xl xl:text-3xl  font-light">Cel</div> */}
               </div>
             </div>
           </div>
@@ -388,14 +388,14 @@ export const Dashboard = ({ historyData }) => {
                 <div className="border-r-2 border-r-black">
                   <div className="flex pb-4" style={humdStyle}>
                     <img className="w-[30%] " src="humidity.png" alt="img" />
-                    <div className="align-center m-auto">
+                    <div className="align-center m-auto text-1xl">
                       <div>Humidity</div>
                       <div className="font-bold">{realtimeData.humd || 0}%</div>
                     </div>
                   </div>
                   <div className="flex">
                     <img className="w-[30%] " src="lamp.png" alt="img" />
-                    <div className="align-center m-auto">
+                    <div className="align-center m-auto text-1xl">
                       <div>Light Level</div>
                       <div className="font-bold">{realtimeData.light || 0}</div>
                     </div>
@@ -407,7 +407,7 @@ export const Dashboard = ({ historyData }) => {
                 <div>
                   <div className="flex pb-4">
                     <img className="w-[30%] " src="sunrise.png" alt="img" />
-                    <div className="align-center m-auto">
+                    <div className="align-center m-auto text-1xl">
                       <div>Sunrise</div>
                       <div className="font-bold">
                         {realtimeData.sunrise || "00:00"}
@@ -416,7 +416,7 @@ export const Dashboard = ({ historyData }) => {
                   </div>
                   <div className="flex">
                     <img className="w-[30%] " src="sunset.png" alt="img" />
-                    <div className="align-center m-auto">
+                    <div className="align-center m-auto text-1xl">
                       <div>Sunset</div>
                       <div className="font-bold">
                         {realtimeData.sunset || "00:00"}
@@ -437,9 +437,9 @@ export const Dashboard = ({ historyData }) => {
                 // month: 'short',
                 // day: 'numeric',
               })} */}
-              <div style={{ display: "flex", justifyContent: "center",border: "1px solid black",  borderRadius: "5px" }} className="p-8 text-3xl text-black font-semibold bg-[#C3CAFF] rounded-xl" >
+              <div style={{ display: "flex", justifyContent: "center",border: "1px solid black",  borderRadius: "5px" }} className="p-8 text-1xl lg:text-2xl xl:text-3xl text-black font-semibold bg-[#C3CAFF] rounded-xl" >
 
-                <div style={{  height: "auto", textAlign: "center", fontWeight: "bold", fontSize: "2.5rem" }} className="bg-[#C3CAFF] rounded-xl ">
+                <div style={{  height: "auto", textAlign: "center", fontWeight: "bold"}} className="bg-[#C3CAFF] rounded-xl ">
                   {`${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds} ${day < 10 ? "0" : ""}${day}/${month < 10 ? "0" : ""}${month}/${year} `}
                 </div>
               </div>
@@ -453,7 +453,7 @@ export const Dashboard = ({ historyData }) => {
             <div className="flex bg-white rounded-xl justify-around">
               <div className="flex w-[40%] p-8 m-auto">
                 <div className="border-r-2 border-r-black">
-                  <div className="flex pb-4" style={humdStyle}>
+                  <div className="flex pb-4" >
                   <svg className="h-16 w-16 text-indigo-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="4 19 8 13 12 15 16 10 20 14 20 19 4 19" />  <polyline points="4 12 7 8 11 10 16 4 20 8" /></svg>
                     <div className="align-center  ml-7 my-auto">
                       <div>Air Quality Index</div>
@@ -474,7 +474,7 @@ export const Dashboard = ({ historyData }) => {
               </div>
               <div className="flex w-[40%] p-8">
                 <div className="border-r-2 border-r-black">
-                  <div className="flex pb-4" style={humdStyle}>
+                  <div className="flex pb-4" >
                     <img className="w-[30%] " src="thermometer.png" alt="img" />
                     <div className="align-center  ml-7 my-auto">
                       <div>Temperature</div>
