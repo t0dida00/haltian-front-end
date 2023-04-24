@@ -34,7 +34,7 @@ export const Dashboard = ({ historyData }) => {
   }
 
   const disconnect = () => {
-    fetch(`${development_URL}set-up/disconnection/`, {
+    fetch(`${production_URL}set-up/disconnection/`, {
       method: "POST",
     }).then((response) => {
       console.log("Disconnected")
@@ -187,7 +187,7 @@ export const Dashboard = ({ historyData }) => {
   const [tempData, setTempData] = useState([])
 
   const fetchTempData = () => {
-    fetch(`${development_URL}history`)
+    fetch(`${production_URL}history`)
       .then((response) => response.json())
       .then((data) => {
         setTempData(data.list)
