@@ -241,7 +241,7 @@ export const Dashboard = ({ historyData }) => {
         </div>
       )}
 
-      <div className="pt-4 px-32 h-screen">
+      <div className="pt-4 px-32">
         <div className="text-light-purple font-bold text-5xl font-sans mb-12 text-center">
           INDOOR AIR QUALITY MORNITORING
 
@@ -295,7 +295,7 @@ export const Dashboard = ({ historyData }) => {
             </div>
           </div>
 
-          <div className="w-[30%]">
+          <div className="w-[30%] flex flex-col justify-between">
             <div className="bg-white rounded-xl flex py-4 mb-8" style={co2Style}>
 
               <div className="flex align-middle justify-center w-[50%]">
@@ -310,7 +310,7 @@ export const Dashboard = ({ historyData }) => {
                 <div className="text-light-purple font-medium text-1xl lg:text-2xl xl:text-3xl pt-4 pb-4" style={co2Style}>
                   Carbon Dioxide
                 </div>
-                <div className="inline-block text-1xl lg:text-3xl xl:text-4xl pr-2 pb-8 ">
+                <div className="inline-block text-1xl lg:text-3xl xl:text-5xl pr-2 pb-8 ">
                   {realtimeData.co2 || 0} ppm
                 </div>
                 {/* <div className="inline-block text-1xl lg:text-2xl xl:text-3xl font-light">ppm</div> */}
@@ -329,7 +329,7 @@ export const Dashboard = ({ historyData }) => {
                 <div className="text-1xl lg:text-2xl xl:text-3xl text-light-purple font-medium pt-4 pb-4" style={tvocStyle}>
                   T. V. O. C.
                 </div>
-                <div className="inline-block text-1xl lg:text-3xl xl:text-4xl pr-2 pb-8">
+                <div className="inline-block text-1xl lg:text-3xl xl:text-5xl pr-2 pb-8">
                   {realtimeData.tvoc || 0} ppb
                 </div>
                 {/* <div className="inline-block text-1xl lg:text-2xl xl:text-3xl font-light">ppb</div> */}
@@ -339,7 +339,7 @@ export const Dashboard = ({ historyData }) => {
 
           </div>
 
-          <div className="w-[30%]">
+          <div className="w-[30%] flex flex-col justify-between">
 
             <div className="bg-white rounded-xl flex py-4 mb-8">
               <div className="flex align-middle justify-center w-[50%]">
@@ -353,7 +353,7 @@ export const Dashboard = ({ historyData }) => {
                 <div className=" text-1xl lg:text-2xl xl:text-3xl text-light-purple font-medium pt-4 pb-4">
                   Air Pressure
                 </div>
-                <div className="inline-block text-1xl lg:text-3xl xl:text-4xl pr-2 pb-8">
+                <div className="inline-block text-1xl lg:text-3xl xl:text-5xl pr-2 pb-8">
                   {realtimeData.airp || 0} hPa
                 </div>
                 {/* <div className="inline-block text-1xl lg:text-2xl xl:text-3xl font-light">hPA</div> */}
@@ -372,7 +372,7 @@ export const Dashboard = ({ historyData }) => {
                 <div className="text-1xl lg:text-2xl xl:text-3xl  text-light-purple font-medium pt-4 pb-4" style={tempStyle}>
                   Temperature
                 </div>
-                <div className="inline-block  text-1xl lg:text-3xl xl:text-4xl pr-2 pb-8">
+                <div className="inline-block  text-1xl lg:text-3xl xl:text-5xl pr-2 pb-8">
                   {realtimeData.temp || 0} Cel
                 </div>
                 {/* <div className="inline-block text-1xl lg:text-2xl xl:text-3xl  font-light">Cel</div> */}
@@ -446,7 +446,7 @@ export const Dashboard = ({ historyData }) => {
             {/* </div> */}
           </div>
           <div className="bg-white w-[60%] rounded-xl p-8 ">
-            <div className="text-center text-5xl	">
+            <div className="text-center text-1xl lg:text-3xl xl:text-5xl	">
               <div className="font-semibold">OUTDOOR WEATHER</div>
 
             </div>
