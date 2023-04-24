@@ -261,8 +261,8 @@ export const Dashboard = ({ historyData }) => {
 
           </div> */}
         </div>
-          <div className="flex flex-col justify-between h-[90%]">
-        <div className="flex justify-between mb-4 h-[50%]">
+          <div className="flex flex-col justify-between ">
+        <div className="flex justify-between mb-4 ">
           <div className="bg-white rounded-xl flex flex-col w-[30%] h-auto justify-between p-4">
             <div className="text-center text-light-purple text-2xl ">
               AIR QUALITY INDEX
@@ -445,7 +445,7 @@ export const Dashboard = ({ historyData }) => {
               </div>
             {/* </div> */}
           </div>
-          <div className="bg-white w-[60%] rounded-xl p-8 ">
+          <div className="bg-white w-[60%] rounded-xl p-8 flex flex-col justify-between">
             <div className="text-center text-1xl font-bold	">
               <div className="font-semibold">OUTDOOR WEATHER</div>
 
