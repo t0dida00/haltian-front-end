@@ -241,7 +241,7 @@ export const Dashboard = ({ historyData }) => {
         </div>
       )}
 
-      <div className="pt-4 px-32">
+      <div className="pt-4 px-32 flex flex-col justify-between h-[90%]">
         <div className="text-light-purple font-bold text-5xl font-sans mb-4 text-center">
           INDOOR AIR QUALITY MORNITORING
 
@@ -261,7 +261,7 @@ export const Dashboard = ({ historyData }) => {
 
           </div> */}
         </div>
-          <div>
+          <div className="flex flex-col justify-between h-[90%]">
         <div className="flex justify-between mb-4 h-[50%]">
           <div className="bg-white rounded-xl flex flex-col w-[30%] h-auto justify-between p-4">
             <div className="text-center text-light-purple text-2xl ">
