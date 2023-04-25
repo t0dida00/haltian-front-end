@@ -495,9 +495,9 @@ export const Dashboard = ({ historyData }) => {
                   </div>
                 </div>
               </div>
-              <div className="flex p-4 justify-center">
+              <div className="flex p-4">
                 <div>
-                  <div className="flex pb-4">
+                  <div className="flex pb-4 justify-center">
                     <img className="w-[20%] " src="humidity.png" alt="img" />
                     <div className="align-center  ml-7 my-auto">
                       <div>Humidity</div>

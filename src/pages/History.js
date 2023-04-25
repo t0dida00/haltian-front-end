@@ -11,8 +11,8 @@ import {
   ResponsiveContainer,
 } from "recharts"
 
-const URL = "http://localhost:8080/"
-
+//const URL = "http://localhost:8080/"
+const URL ="https://air-quality.azurewebsites.net/"
 export const History = () => {
   const navigate = useNavigate()
   const navigateDashboard = () => {
@@ -73,20 +73,20 @@ export const History = () => {
               <CartesianGrid strokeDasharray="3 3" />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="Temperature" stroke="#8884d8" />
+              <Line type="monotone" dataKey="Temperature" stroke="#8884d8" dot={false}/>
             </LineChart>
           </ResponsiveContainer>
 
           <div></div>
 
           <ResponsiveContainer>
-            <LineChart data={humidityData}>
+            <LineChart data={humidityData}  >
               <XAxis dataKey="Time" />
               <YAxis />
               <CartesianGrid strokeDasharray="3 3" />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="Humidity" stroke="#82ca9d" />
+              <Line type="monotone" dataKey="Humidity" stroke="#82ca9d" dot={false}/>
             </LineChart>
           </ResponsiveContainer>
 
@@ -97,7 +97,7 @@ export const History = () => {
               <CartesianGrid strokeDasharray="3 3" />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="CO2" stroke="#ffc658" />
+              <Line type="monotone" dataKey="CO2" stroke="#ffc658" dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>
